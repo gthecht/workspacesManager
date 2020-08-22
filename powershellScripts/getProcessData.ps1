@@ -1,0 +1,1 @@
+Get-Process | Format-Table NAME, DESCRIPTION, PRODUCT, PATH
