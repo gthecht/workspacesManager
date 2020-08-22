@@ -1,0 +1,22 @@
+
+BUGS:
+  appsHandler.py:
+    powershell app isn't recognized in the open apps. Check which other one's aren't recognized well.
+    Make sure all the apps that are open, have an app from the apps df that fits them.
+
+ARCHITECTURE:
+  handlersManager        - uses the apps handler, the explorer handler, the files handler and the url handler to see what's open and thus gather information for clustering.
+  explorerHandler - retrieves information about open explorer windows
+  appsHandler     - retrieves info about open apps
+  filesHandler    - for open apps, get the files and their paths so that we can directly open the file and not the app
+  urlsHandler     - irrespective of the browser, we want to get the urls that belong to the project
+
+  project         - holds the data for the projects. This includes: files, (and paths), apps, and urls. For each one it has a time for when it was last opened, and how
+                    much a part of the project it is (weight that when below a threshold, means that file doesn't belong to the prject anymore)
+  projectsHandler - has all the projects, in charge of recognizing the current project and the current apps.
+  clusterizer     - creates the project clusters from the data - is called by the projectsHandler
+  endpoints       - this defines the API for the system - how to open and close projects, when to learn, or what to add to a project.
+  index           - runs the whole app
+
+NODE:
+  The app will also have a gui, built in node and react, so that it can run either in electron, or on the browser.
