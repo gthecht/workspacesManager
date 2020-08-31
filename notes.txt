@@ -3,7 +3,6 @@ BUGS:
   appsHandler.py:
     Make sure all the apps that are open, have an app from the apps df that fits them.
     Apps installed with the microsoft store aren't handled well. The are opened differently, not from the start exactly, and also it is harder to know if they are open.
-    The App chosen was "About itunes" and not just "itunes" - this is beacuse the function takes the first option from the highest ranks. How about taking the shortest?
 
 ARCHITECTURE:
   handlersManager - uses the apps handler, the explorer handler, the files handler and the url handler to see what's open and thus gather information for clustering.

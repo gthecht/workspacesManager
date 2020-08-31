@@ -8,7 +8,7 @@ import dateutil.parser
 def findWordsinString(wordStr, string):
   words = wordStr.split()
   appear = list(filter(lambda word: word.lower() in string.lower(), words))
-  return len(appear)
+  return len(appear) / len(words)
 
 def matchCandidates(list1, list2):
   if not len(list1): return list2
