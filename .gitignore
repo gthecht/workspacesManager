@@ -131,6 +131,9 @@ dmypy.json
 # vscode
 .vscode/
 
-#documents
+# documents
 .docx
 .pptx
+
+# log files from tests
+logs/*
