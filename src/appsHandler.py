@@ -56,6 +56,7 @@ class AppsHandler:
       except Exception as err:
         print("Powershell client failed to get open apps with error: " + str(err))
         raise err
+      openAppsList = self.cleanList(items, openAppsList)
       openApps = pd.DataFrame(openAppsList, columns=items)
       appNames = [""] * openApps.shape[0]
       for ind in range(openApps.shape[0]):
@@ -80,6 +81,20 @@ class AppsHandler:
       openApps.insert(len(items), "EndTime", [""] * openApps.shape[0])
       return openApps
     else: return self.unknownOSWarning()
+
+  # cleans the list because sometimes powershell returns moved rows in the table.
+  def cleanList(self, items, appsList):
+    cleanList = []
+    startTimeInd = items.index("StartTime")
+    for row in appsList:
+      if not row[startTimeInd][0].isdigit():
+        firstDigit = [c.isdigit() for c in row[startTimeInd]].index(True)
+        for ind in np.arange(startTimeInd, len(items)):
+          row[ind - 1] += row[ind][:firstDigit]
+          row[ind - 1] = row[ind - 1].strip()
+          row[ind] = row[ind][firstDigit:]
+      cleanList.append(row)
+    return cleanList
 
   # Checks which apps are suitable for this item
   def getAppCandidates(self, item):
