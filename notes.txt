@@ -4,6 +4,10 @@ BUGS:
     Make sure all the apps that are open, have an app from the apps df that fits them.
     Apps installed with the microsoft store aren't handled well. The are opened differently, not from the start exactly, and also it is harder to know if they are open.
 
+  powershellClient.py:
+    parsing the data isn't perfect. Need to see how to split the lines in a better way.
+    When the window title is too long, it messes with that beginning of the date column.
+
 ARCHITECTURE:
   handlersManager - uses the apps handler, the explorer handler, the files handler and the url handler to see what's open and thus gather information for clustering.
   explorerHandler - retrieves information about open explorer windows
