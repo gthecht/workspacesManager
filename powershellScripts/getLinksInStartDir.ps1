@@ -1,0 +1,1 @@
+Get-ChildItem "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\*.lnk" -Recurse |  Format-List

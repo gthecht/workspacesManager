@@ -1,0 +1,1 @@
+Get-StartApps | Format-Table Name
