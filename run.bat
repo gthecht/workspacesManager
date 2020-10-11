@@ -1,0 +1,1 @@
+python D:\Workspace\workspacesManager\src\gatherAppsData.py
