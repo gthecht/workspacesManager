@@ -24,3 +24,6 @@ ARCHITECTURE:
 
 NODE:
   The app will also have a gui, built in node and react, so that it can run either in electron, or on the browser.
+
+FEATURES TO ADD:
+  Add non latin characters to the apps - this may involve using something other than powershell to get the apps.
