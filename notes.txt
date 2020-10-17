@@ -3,6 +3,10 @@ BUGS:
   appsHandler.py:
     Make sure all the apps that are open, have an app from the apps df that fits them.
     Apps installed with the microsoft store aren't handled well. The are opened differently, not from the start exactly, and also it is harder to know if they are open.
+    These apps use name and description of
+      ApplicationFrameHost, Application Frame Host
+      WWAHost, Microsoft WWA Host
+    Which means that we need to identify them differently.
 
   powershellClient.py:
     parsing the data isn't perfect. Need to see how to split the lines in a better way.
