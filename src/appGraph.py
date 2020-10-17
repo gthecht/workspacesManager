@@ -65,8 +65,12 @@ class appsGraph:
       for ind2, app2 in apps_to_check.iterrows():
         x_ind = self.apps.index(app1["Name"])
         y_ind = self.apps.index(app2["Name"])
+        print(app1["Name"], "-", x_ind)
         concurrency = self.get_apps_concurrency(app1, app2)
         self.graph_matrix[x_ind, y_ind] += concurrency
+        # If app2 is in apps_to_update and of course, app1 is in apps_to_check
+        # We don't need to add to [y_ind, x_ind]:
+        if app2["Name"] in apps_to_update["Name"]: continue
         self.graph_matrix[y_ind, x_ind] = self.graph_matrix[x_ind, y_ind]
 
   def get_apps_concurrency(self, app1, app2):
