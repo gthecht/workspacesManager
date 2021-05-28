@@ -1,7 +1,9 @@
+import os
 import sys
-import subprocess as Subprocess
 import numpy as np
 import pandas as pd
+parent = os.path.abspath('./src')
+sys.path.insert(1, parent)
 import powershellClient as PSClient
 import dateutil.parser
 

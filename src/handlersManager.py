@@ -1,4 +1,4 @@
-from appsHandler import AppsHandler
+from apps.appsHandler import AppsHandler
 
 class HandlersManager:
   def __init__(self):
