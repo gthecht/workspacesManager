@@ -21,12 +21,16 @@ def matchCandidates(list1, list2):
 #%% AppsHandler class:
 class AppsHandler:
   def __init__(self):
-    if "win" in sys.platform: self.os = "windows"
-    elif "linux" in sys.platform: self.os = "linux"
-    else: raise TypeError("unknown system platform", sys.platform)
+    self.get_os()
     if self.os == "windows": self.STARTPATH = "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\"
     self.getApps()
     print("apps handler constructed")
+
+  # Get operating system:
+  def get_os(self):
+    if "win" in sys.platform: self.os = "windows"
+    elif "linux" in sys.platform: self.os = "linux"
+    else: raise TypeError("unknown system platform", sys.platform)
 
   def getApps(self):
     print("Initializing apps with the start shortcuts")

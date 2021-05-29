@@ -1,8 +1,13 @@
 from time import sleep
 from datetime import datetime
-from handlersManager import HandlersManager
 import pandas as pd
 import numpy as np
+
+import os
+import sys
+parent = os.path.abspath('./src')
+sys.path.insert(1, parent)
+from handlersManager import HandlersManager
 
 class Gatherer:
   def __init__(self, logDir):
@@ -39,17 +44,22 @@ class Gatherer:
   def compareData(self, data):
     # find rows from the old that are duplicated in the new:
     concatDf = pd.concat([data, self.data], ignore_index=True)
-    duplicated = concatDf.duplicated()
+    duplicated = concatDf.duplicated(keep='first')
     ended = [not dup for dup in duplicated[len(data):]] # these are the old apps that have ended
-    now = datetime.now().isoformat()
+    now = datetime.now().isoformat()[:-7]
     for ind in [i for i, e in enumerate(ended) if e]:
       if concatDf.loc[ind + len(data.index)]["EndTime"] == "":
         concatDf.loc[ind + len(data.index)]["EndTime"] = now
+
+    duplicatedstart = concatDf.duplicated(keep='last')
+    started = [not dup for dup in duplicatedstart[:len(data)]] # these are the new apps that have started
+    for ind in [i for i, e in enumerate(started) if e]:
+      concatDf.loc[ind]["StartTime"] = now
     self.data = concatDf.drop_duplicates().sort_values(["App", "Name", "StartTime", "EndTime"], ignore_index=True)
 
   def stop(self):
     self.run = False
 
 if __name__ == '__main__':
-  gatherer = Gatherer("D:/Workspace/workspacesManager/logs/")
+  gatherer = Gatherer("C:/Users/GiladHecht/Workspace/workspacesManager/logs/")
   gatherer.gather()
