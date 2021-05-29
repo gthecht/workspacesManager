@@ -14,6 +14,7 @@ def pipePS2List(cmd):
 def getPSTable(cmd, items):
   fullCmd = cmd + " | Format-Table " + ", ".join(items) + " -AutoSize | Out-String -Width 1024"
   rowsList = runPowershell(fullCmd).split("\\r\\n")[1:-2]
+  if len(rowsList) == 0: return []
   places = [rowsList[0].lower().find(item.lower()) for item in items]
   if len(items) == 1: tableList = [[row] for row in rowsList]
   else: tableList = [[row[:places[1]]] + [row[places[ind + 1]:places[ind + 2]] for ind in range(len(places) - 2)] + [row[places[-1]:]] for row in rowsList]

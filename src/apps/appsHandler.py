@@ -2,10 +2,13 @@ import os
 import sys
 import numpy as np
 import pandas as pd
+import dateutil.parser
+
 parent = os.path.abspath('./src')
 sys.path.insert(1, parent)
 import powershellClient as PSClient
-import dateutil.parser
+import unknownOSWarning
+from apps.explorer import Explorer
 
 def findWordsinString(wordStr, string):
   words = wordStr.split()
@@ -23,6 +26,7 @@ class AppsHandler:
   def __init__(self):
     self.get_os()
     if self.os == "windows": self.STARTPATH = "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\"
+    self.explorer = Explorer()
     self.getApps()
     print("apps handler constructed")
 
@@ -75,6 +79,7 @@ class AppsHandler:
           appNames[ind] = (self.apps.index[appInd])
       openApps.insert(1, "App", appNames)
       self.addOpenAppsCommandtoApps(openApps)
+      openApps = self.getOpenFolders(openApps)
       # change start time to date object, and add end time field:
       try:
         StartTime = openApps.assign(
@@ -86,7 +91,7 @@ class AppsHandler:
       openApps.update(StartTime)
       openApps.insert(len(items), "EndTime", [""] * openApps.shape[0])
       return openApps
-    else: return self.unknownOSWarning()
+    else: return unknownOSWarning()
 
   # cleans the list because sometimes powershell returns moved rows in the table.
   def cleanList(self, items, appsList):
@@ -110,17 +115,22 @@ class AppsHandler:
   def getTopApp(self):
     if self.os == "windows":
       print("need to get the top window")
-    else: return self.unknownOSWarning()
-
-  def unknownOSWarning(self):
-    # need to make it work for linux
-    raise TypeError("unknown system platform", sys.platform)
+      # use the cpp program using windows SDK
+    else: return unknownOSWarning()
 
   def addOpenAppsCommandtoApps(self, openApps):
     for ind in range(openApps.shape[0]):
       if (openApps.App.loc[ind] == ""): continue
       if (self.apps.path.loc[openApps.App.loc[ind]] == None):
         self.apps.path.loc[openApps.App.loc[ind]] = openApps.Path.loc[ind]
+
+  def getOpenFolders(self, openApps):
+    explorerRow = openApps.loc[openApps["Name"] == "explorer"]
+    openApps = openApps[openApps["Name"] != "explorer"]
+    openFolders = self.explorer.get_open_explorers(explorerRow)
+    openApps = openApps.append(openFolders)
+    openApps.reset_index(drop=True, inplace=True)
+    return openApps
 
 if __name__ == '__main__':
   appsHandler = AppsHandler()
