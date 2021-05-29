@@ -1,0 +1,3 @@
+Get-ChildItem -Recurse | Format-Table Name, CreationTime, LastWriteTime, LastAccessTime, FullName
+Get-ChildItem -Recurse -ErrorAction silentlycontinue | Where-Object { $_.LastAccessTime -gt "2021-05-30T10:00:30.00"} | Format-Table Name, LastWriteTime, LastAccessTime, FullName, Extension, Directory
+# Get-ChildItem \*\*\*,\*\*,\* | Format-Table Name, CreationTime, LastWriteTime, LastAccessTime, FullName
