@@ -12,8 +12,8 @@ from apps.explorer import Explorer
 
 #%% FilesHandler class:
 class FilesHandler:
-  def __init__(self):
-    self.get_os()
+  def __init__(self, os="windows"):
+    self.os = os
     self.items = [
       "Name",
       "LastWriteTime",
@@ -23,12 +23,6 @@ class FilesHandler:
       "FullName"
     ]
     print("files handler constructed")
-
-  # Get operating system:
-  def get_os(self):
-    if "win" in sys.platform: self.os = "windows"
-    elif "linux" in sys.platform: self.os = "linux"
-    else: raise TypeError("unknown system platform", sys.platform)
 
   # Get the childitems of the given project
   def get_open_files(self, paths, start_time):
@@ -61,6 +55,6 @@ if __name__ == '__main__':
   now = datetime.now().isoformat()[:10]
   proj = Project([os.path.abspath('.')], now)
   files_handler = FilesHandler()
-  open_files = files_handler.get_files(proj)
+  open_files = files_handler.get_open_files(proj)
   print("open files:")
   print(open_files)
