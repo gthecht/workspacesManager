@@ -12,7 +12,7 @@ from handlersManager import HandlersManager
 class Gatherer:
   def __init__(self, logDir):
     self.logDir = logDir
-    self.handlersManager = HandlersManager()
+    self.handlersManager = HandlersManager([os.path.abspath('.')])
     self.run = False
     self.logFile = self.logDir + "log-" + datetime.now().strftime('%Y-%m-%dT%H-%M-%S') + ".csv"
     self.SLEEP_TIME = 30 # time to sleep between data collection - note that gathering the apps takes about 2 seconds
@@ -20,7 +20,9 @@ class Gatherer:
   def gather(self):
     self.run = True
     try:
-      self.data = self.handlersManager.gather()
+      self.handlersManager.gather()
+      self.handlersManager.save()
+      self.data = self.handlersManager.get_apps()
     except Exception as err:
       print("Failed to gather data with err: " + str(err))
       print("Waiting a bit, and trying to gather again")
@@ -32,7 +34,9 @@ class Gatherer:
       sleep(self.SLEEP_TIME)
       print("Gathering data")
       try:
-        data = self.handlersManager.gather()
+        self.handlersManager.gather()
+        self.handlersManager.save()
+        data = self.handlersManager.get_apps()
       except Exception as err:
         print("Failed to gather data with err: " + str(err))
         print("Waiting a bit, and trying to gather again")
