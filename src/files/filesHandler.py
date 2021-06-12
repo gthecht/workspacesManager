@@ -41,12 +41,12 @@ class FilesHandler:
             " -Recurse -ErrorAction silentlycontinue " + \
             "| Where-Object { $_.LastAccessTime -gt \"" + \
             start_time + "\"}"
-      new_child_items = PSClient.getPSTable(cmd, self.items)
+      new_child_items = PSClient.get_PS_table(cmd, self.items)
       for child_item in new_child_items:
         child_items.append(child_item)
     open_files = pd.DataFrame(child_items, columns=self.items)
     # parse time fields:
-    open_files = PSClient.parseTime(
+    open_files = PSClient.parse_time(
       open_files, ["LastWriteTime", "LastAccessTime"]
     )
     return open_files

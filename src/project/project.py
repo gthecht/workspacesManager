@@ -80,12 +80,12 @@ class Project:
     for path in self.paths:
       cmd = "Get-ChildItem " + path + \
             " -Recurse -ErrorAction silentlycontinue"
-      new_child_items = PSClient.getPSTable(cmd, self.file_items)
+      new_child_items = PSClient.get_PS_table(cmd, self.file_items)
       for child_item in new_child_items:
         child_items.append(child_item)
     self.files = pd.DataFrame(child_items, columns=self.file_items)
     # parse time fields:
-    self.files = PSClient.parseTime(
+    self.files = PSClient.parse_time(
       self.files, ["LastWriteTime", "LastAccessTime"]
     )
     # Add columns to files:
@@ -104,7 +104,7 @@ class Project:
     for path in self.paths:
       cmd = "Get-ChildItem " + path + \
             " -Directory -Recurse -ErrorAction silentlycontinue"
-      new_child_items = PSClient.getPSTable(cmd, ["FullName"])
+      new_child_items = PSClient.get_PS_table(cmd, ["FullName"])
       for child_item in new_child_items:
         if child_item not in self.paths:
           self.dirs.append(child_item[0])
