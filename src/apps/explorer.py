@@ -4,7 +4,7 @@ import pandas as pd
 parent = os.path.abspath('./src')
 sys.path.insert(1, parent)
 import powershellClient as PSClient
-import unknownOSWarning
+from unknownOSWarning import unknown_OS_Warning
 
 class Explorer:
   def __init__(self) -> None:
@@ -21,7 +21,7 @@ class Explorer:
       items = ["LocationName", "LocationURL"]
       open_dirs_list = PSClient.getPSTable(cmd, items)
       return open_dirs_list
-    else: return unknownOSWarning()
+    else: return unknown_OS_Warning()
 
   def get_open_explorers(self, explorerRow):
       openDirs = pd.DataFrame([], columns=list(explorerRow.columns))

@@ -7,7 +7,7 @@ import dateutil.parser
 parent = os.path.abspath('./src')
 sys.path.insert(1, parent)
 import powershellClient as PSClient
-import unknownOSWarning
+from unknownOSWarning import unknown_OS_Warning
 from apps.explorer import Explorer
 
 def findWordsinString(wordStr, string):
@@ -85,7 +85,7 @@ class AppsHandler:
       openApps.update(StartTime)
       openApps.insert(len(items), "EndTime", [""] * openApps.shape[0])
       return openApps
-    else: return unknownOSWarning()
+    else: return unknown_OS_Warning()
 
   # cleans the list because sometimes powershell returns moved rows in the table.
   def cleanList(self, items, appsList):
@@ -110,7 +110,7 @@ class AppsHandler:
     if self.os == "windows":
       print("need to get the top window")
       # use the cpp program using windows SDK
-    else: return unknownOSWarning()
+    else: return unknown_OS_Warning()
 
   def addOpenAppsCommandtoApps(self, openApps):
     for ind in range(openApps.shape[0]):

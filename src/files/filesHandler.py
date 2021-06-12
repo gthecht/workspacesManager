@@ -6,7 +6,7 @@ from datetime import datetime
 parent = os.path.abspath('./src')
 sys.path.insert(1, parent)
 import powershellClient as PSClient
-import unknownOSWarning
+from unknownOSWarning import unknown_OS_Warning
 from project.project import Project
 from apps.explorer import Explorer
 
@@ -32,7 +32,7 @@ class FilesHandler:
     if self.os == "windows":
       open_files = self.get_files_from_powershell(paths, start_time)
       return open_files
-    else: return unknownOSWarning()
+    else: return unknown_OS_Warning()
 
   def get_files_from_powershell(self, paths, start_time):
     child_items = []
