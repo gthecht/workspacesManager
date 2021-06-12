@@ -14,7 +14,7 @@ class Project:
   # load existing project from some path
   def load(path):
     if not os.path.isdir(os.path.join(path, ".rarian")):
-      raise FileNotFoundError("Path is not a rarian project")
+      raise FileNotFoundError("Path != a rarian project")
     data_path = os.path.join(path, ".rarian", "data.json")
     with open(data_path, 'r') as files_csv:
       files_str = files_csv.read()
@@ -137,7 +137,7 @@ class Project:
     # self.files.reset_index(drop=True, inplace=True)
 
   def update(self, open_files, open_apps):
-    if open_files.index.name is not "FullName":
+    if open_files.index.name != "FullName":
       open_files.set_index("FullName", inplace=True)
     # if "FullName" not in open_files.index.names:
       # open_files.set_index("FullName", inplace=True)
