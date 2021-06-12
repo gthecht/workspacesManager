@@ -4,6 +4,7 @@ import sys
 import pandas as pd
 import numpy as np
 import json
+import asyncio
 
 parent = os.path.abspath('./src')
 sys.path.insert(1, parent)
@@ -64,28 +65,30 @@ class Project:
       "Directory",
       "FullName"
     ]
-    if dirs is None: self.get_directories()
-    else: self.dirs = dirs
-    if files is None: self.get_files()
-    else: self.files = files
+    self.dirs = dirs
+    self.files = files
     self.apps = apps
     self.open_files = []
     self.open_apps = []
 
+  async def init_self_data(self):
+    await self.get_directories()
+    await self.get_files()
+
   def path(self):
     return self.paths[0]
 
-  def get_files(self):
+  async def get_files(self):
     child_items = []
     for path in self.paths:
       cmd = "Get-ChildItem " + path + \
             " -Recurse -ErrorAction silentlycontinue"
-      new_child_items = PSClient.get_PS_table(cmd, self.file_items)
+      new_child_items = await PSClient.get_PS_table(cmd, self.file_items)
       for child_item in new_child_items:
         child_items.append(child_item)
     self.files = pd.DataFrame(child_items, columns=self.file_items)
     # parse time fields:
-    self.files = PSClient.parse_time(
+    self.files = await PSClient.parse_time(
       self.files, ["LastWriteTime", "LastAccessTime"]
     )
     # Add columns to files:
@@ -99,17 +102,17 @@ class Project:
     self.files.set_index("FullName", inplace=True)
 
   # get directories:
-  def get_directories(self):
+  async def get_directories(self):
     self.dirs = self.paths.copy()
     for path in self.paths:
       cmd = "Get-ChildItem " + path + \
             " -Directory -Recurse -ErrorAction silentlycontinue"
-      new_child_items = PSClient.get_PS_table(cmd, ["FullName"])
+      new_child_items = await PSClient.get_PS_table(cmd, ["FullName"])
       for child_item in new_child_items:
         if child_item not in self.paths:
           self.dirs.append(child_item[0])
 
-  def save(self):
+  async def save(self):
     data_dict = {
       "paths": self.paths,
       "name": self.name,
@@ -174,7 +177,7 @@ class Project:
     # apps not used by the next project should be closed
 
     # SAVE FILES:
-    self.save()
+    asyncio.run(self.save())
     self.end_time = datetime.now() # Not sure if I need this
 
   def turn_on(self):
@@ -185,9 +188,11 @@ class Project:
 
 if __name__ == '__main__':
   project = Project([os.path.abspath('.')], "workspacesManager", "test", "giladH")
+  asyncio.run(project.init_self_data())
   project.remove_sub_directory("C:/Users/GiladHecht/Workspace/workspacesManager/src")
-  project.save()
+  asyncio.run(project.save())
   load_project = Project.load(os.path.abspath('.'))
+  asyncio.run(load_project.init_self_data())
   print("files:", project.files.equals(load_project.files))
   print("paths:", project.paths == load_project.paths)
   print("name:", project.name == load_project.name)
