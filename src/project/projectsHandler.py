@@ -1,6 +1,10 @@
-from project.project import Project
 import os
+import sys
+import asyncio
 
+parent = os.path.abspath('./src')
+sys.path.insert(1, parent)
+from project.project import Project
 
 class ProjectsHandler:
   def __init__(self, projects_paths, os="windows"):
@@ -15,7 +19,8 @@ class ProjectsHandler:
       try:
         path = os.path.normpath(path)
         project = Project.load(path)
-      except FileNotFoundError as err:
+        asyncio.run(project.init_self_data())
+      except FileNotFoundError:
         print("Error: path '" + path + "' is not  a rarian project")
         del self.projects_paths[ind]
         continue
@@ -43,9 +48,9 @@ class ProjectsHandler:
   def get_current(self):
     return self.current
 
-  def save(self):
+  async def save(self):
     if self.current is None: return None
-    self.projects[self.current].save()
+    await self.projects[self.current].save()
 
   def update(self, open_files, open_apps):
     if self.current is None: return None
