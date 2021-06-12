@@ -1,1 +1,1 @@
-python C:\Users\GiladHecht\Workspace\workspacesManager\src\gatherAppsData.py
+python C:\Users\GiladHecht\Workspace\workspacesManager\src\apps\gatherAppsData.py
