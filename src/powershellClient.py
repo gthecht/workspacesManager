@@ -33,7 +33,7 @@ def reslash(data_list, slash="\\"):
         data_list[ind] = element
       elif "\\" in element:
         data_list[ind] = os.path.normpath(element)
-    except TypeError as err:
+    except TypeError:
       # value wasn't a string
       continue
   return data_list
