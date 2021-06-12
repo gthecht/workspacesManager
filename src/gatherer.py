@@ -1,12 +1,8 @@
 from time import sleep
 from datetime import datetime
 import pandas as pd
-import numpy as np
 
 import os
-import sys
-parent = os.path.abspath('./src')
-sys.path.insert(1, parent)
 from handlersManager import HandlersManager
 
 class Gatherer:
