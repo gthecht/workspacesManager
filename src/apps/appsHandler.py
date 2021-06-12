@@ -3,6 +3,7 @@ import sys
 import numpy as np
 import pandas as pd
 import dateutil.parser
+import asyncio
 
 parent = os.path.abspath('./src')
 sys.path.insert(1, parent)
@@ -27,14 +28,13 @@ class AppsHandler:
     self.os = os
     if self.os == "windows": self.STARTPATH = "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\"
     self.explorer = Explorer()
-    self.get_apps()
     print("apps handler constructed")
 
-  def get_apps(self):
+  async def get_apps(self):
     print("Initializing apps with the start shortcuts")
-    start_apps = PSClient.get_PS_table("Get-StartApps", ["Name"])
+    start_apps = await PSClient.get_PS_table("Get-StartApps", ["Name"])
     start_apps = [app[0] for app in start_apps]
-    apps_table = PSClient.get_PS_table("Get-ChildItem \"" + self.STARTPATH + "*\" -Recurse | where { ! $_.PSIsContainer }", ["Name", "FullName"])
+    apps_table = await PSClient.get_PS_table("Get-ChildItem \"" + self.STARTPATH + "*\" -Recurse | where { ! $_.PSIsContainer }", ["Name", "FullName"])
 
     apps_list = []
     candidates = []
@@ -52,11 +52,11 @@ class AppsHandler:
     }
     self.apps = pd.DataFrame(apps_dict, index=apps_list,columns=["path", "pathCandidates"])
 
-  def get_open_apps(self):
+  async def get_open_apps(self):
     if self.os == "windows":
       items = ["Id", "Name", "Description", "MainWindowTitle", "StartTime", "Path"]
       try:
-        open_apps_list = PSClient.get_PS_table("Get-Process | Where-Object { $_.MainWindowHandle -ne 0}", items)
+        open_apps_list = await PSClient.get_PS_table("Get-Process | Where-Object { $_.MainWindowHandle -ne 0}", items)
       except Exception as err:
         print("Powershell client failed to get open apps with error: " + str(err))
         raise err
@@ -73,7 +73,7 @@ class AppsHandler:
           app_names[ind] = (self.apps.index[appInd])
       open_apps.insert(1, "App", app_names)
       self.add_open_apps_command_to_apps(open_apps)
-      open_apps = self.get_open_folders(open_apps)
+      open_apps = await self.get_open_folders(open_apps)
       # change start time to date object, and add end time field:
       try:
         start_time = open_apps.assign(
@@ -118,16 +118,17 @@ class AppsHandler:
       if (self.apps.path.loc[open_apps.App.loc[ind]] == None):
         self.apps.path.loc[open_apps.App.loc[ind]] = open_apps.Path.loc[ind]
 
-  def get_open_folders(self, open_apps):
+  async def get_open_folders(self, open_apps):
     explorer_row = open_apps.loc[open_apps["Name"] == "explorer"]
     open_apps = open_apps[open_apps["Name"] != "explorer"]
-    open_folders = self.explorer.get_open_explorers(explorer_row)
+    open_folders = await self.explorer.get_open_explorers(explorer_row)
     open_apps = open_apps.append(open_folders)
     open_apps.reset_index(drop=True, inplace=True)
     return open_apps
 
 if __name__ == '__main__':
   apps_handler = AppsHandler()
-  open_apps = apps_handler.get_open_apps()
+  asyncio.run(apps_handler.get_apps())
+  open_apps = asyncio.run(apps_handler.get_open_apps())
   print("open apps:")
   print(open_apps)

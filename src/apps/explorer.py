@@ -13,19 +13,19 @@ class Explorer:
     else: raise TypeError("unknown system platform", sys.platform)
     if self.os == "windows": self.STARTPATH = "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\"
 
-  def get_open_directories(self):
+  async def get_open_directories(self):
     if self.os == "windows":
       cmd = '$a = New-Object -com "Shell.Application"; ' + \
             '$b = $a.windows() | select-object LocationURL, LocationName; ' + \
             '$b'
       items = ["LocationName", "LocationURL"]
-      open_dirs_list = PSClient.get_PS_table(cmd, items)
+      open_dirs_list = await PSClient.get_PS_table(cmd, items)
       return open_dirs_list
     else: return unknown_OS_Warning()
 
-  def get_open_explorers(self, explorerRow):
+  async def get_open_explorers(self, explorerRow):
       openDirs = pd.DataFrame([], columns=list(explorerRow.columns))
-      open_dirs_list = self.get_open_directories()
+      open_dirs_list = await self.get_open_directories()
       if len(open_dirs_list) == 0: return openDirs
       for dir in open_dirs_list:
         row = explorerRow.copy()
