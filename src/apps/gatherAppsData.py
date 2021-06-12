@@ -1,7 +1,10 @@
-from time import sleep
 from datetime import datetime
 import pandas as pd
 import numpy as np
+
+# from time import sleep
+from asyncio import sleep
+import asyncio
 
 import os
 import sys
@@ -17,25 +20,28 @@ class Gatherer:
     self.log_file = self.log_dir + "log-" + datetime.now().strftime('%Y-%m-%dT%H-%M-%S') + ".csv"
     self.SLEEP_TIME = 30 # time to sleep between data collection - note that gathering the apps takes about 2 seconds
 
-  def gather(self):
+  async def init(self):
+    await self.handlers_manager.init()
+
+  async def gather(self):
     self.run = True
     try:
-      self.handlers_manager.gather()
-      self.handlers_manager.save()
+      await self.handlers_manager.gather()
+      await self.handlers_manager.save()
       self.data = self.handlers_manager.get_apps()
     except Exception as err:
       print("Failed to gather data with err: " + str(err))
       print("Waiting a bit, and trying to gather again")
-      sleep(self.SLEEP_TIME)
-      return self.gather()
+      await asyncio.sleep(self.SLEEP_TIME)
+      return await self.gather()
 
     self.data.to_csv(self.log_file, index=False)
     while self.run:
-      sleep(self.SLEEP_TIME)
+      await asyncio.sleep(self.SLEEP_TIME)
       print("Gathering data")
       try:
-        self.handlers_manager.gather()
-        self.handlers_manager.save()
+        await self.handlers_manager.gather()
+        await self.handlers_manager.save()
         data = self.handlers_manager.get_apps()
       except Exception as err:
         print("Failed to gather data with err: " + str(err))
@@ -66,4 +72,5 @@ class Gatherer:
 
 if __name__ == '__main__':
   gatherer = Gatherer("C:/Users/GiladHecht/Workspace/workspacesManager/logs/")
-  gatherer.gather()
+  asyncio.run(gatherer.init())
+  asyncio.run(gatherer.gather())
