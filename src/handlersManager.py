@@ -24,7 +24,7 @@ class HandlersManager:
     project_time = self.projects_handler.get_proj_start_time()
     self.open_files = self.files_handler.get_open_files(project_paths, project_time)
     print("  open apps...")
-    self.open_apps = self.apps_handler.getOpenApps()
+    self.open_apps = self.apps_handler.get_open_apps()
     self.projects_handler.update(self.open_files, self.open_apps)
     return
 
