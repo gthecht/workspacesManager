@@ -13,18 +13,18 @@
     "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\powershellScripts",
     "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src",
     "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\__pycache__",
-    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\apps",
-    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\apps\\__pycache__",
     "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\cpp",
-    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\files",
-    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\files\\__pycache__",
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\gatherer",
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\gatherer\\__pycache__",
     "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\project",
-    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\project\\__pycache__"
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\project\\__pycache__",
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\ui",
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\ui\\__pycache__"
   ],
   "name": "workspacesManager",
   "paths": [
     "C:\\Users\\GiladHecht\\Workspace\\workspacesManager"
   ],
-  "start_time": "2021-06-07T00:26:42.348592",
+  "start_time": "2021-06-21T23:00:38.246752",
   "type": "test"
 }
