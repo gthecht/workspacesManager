@@ -8,7 +8,7 @@ parent = os.path.abspath('./src')
 sys.path.insert(1, parent)
 import powershellClient as PSClient
 from unknownOSWarning import unknown_OS_Warning
-from apps.explorer import Explorer
+from explorer import Explorer
 
 def find_words_in_string(wordStr, string):
   words = wordStr.split()
@@ -21,8 +21,8 @@ def match_candidates(list1, list2):
   else:
     return np.multiply(np.add(list1, list2), np.multiply([weight > 0 for weight in list1], [weight > 0 for weight in list2]))
 
-#%% AppsHandler class:
-class AppsHandler:
+#%% appsGatherer class:
+class AppsGatherer:
   def __init__(self, os="windows"):
     self.os = os
     if self.os == "windows": self.STARTPATH = "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\"
@@ -127,7 +127,7 @@ class AppsHandler:
     return open_apps
 
 if __name__ == '__main__':
-  apps_handler = AppsHandler()
+  apps_handler = AppsGatherer()
   open_apps = apps_handler.get_open_apps()
   print("open apps:")
   print(open_apps)

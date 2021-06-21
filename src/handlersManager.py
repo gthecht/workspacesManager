@@ -1,15 +1,15 @@
 from datetime import datetime
 import sys
 
-from apps.appsHandler import AppsHandler
-from files.filesHandler import FilesHandler
+from gatherer.appsGatherer import AppsGatherer
+from gatherer.filesGatherer import FilesGatherer
 from project.projectsHandler import ProjectsHandler
 
 class HandlersManager:
   def __init__(self, paths):
     self.get_os()
-    self.apps_handler = AppsHandler(self.os)
-    self.files_handler = FilesHandler(self.os)
+    self.apps_handler = AppsGatherer(self.os)
+    self.files_handler = FilesGatherer(self.os)
     self.projects_handler = ProjectsHandler(paths, self.os)
 
   # Get operating system:
