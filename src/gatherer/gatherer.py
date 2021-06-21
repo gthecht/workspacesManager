@@ -2,23 +2,16 @@ from time import sleep
 from datetime import datetime
 import pandas as pd
 
-import os
-import sys
-
 from appsGatherer import AppsGatherer
 from filesGatherer import FilesGatherer
-parent = os.path.abspath('./src')
-sys.path.insert(1, parent)
-from project.projectsHandler import ProjectsHandler
-
 
 class Gatherer:
-  def __init__(self, log_dir, paths, os="windows"):
+  def __init__(self, log_dir, projects_handler, os="windows"):
     self.log_dir = log_dir
     self.os = os
     self.apps_handler = AppsGatherer(self.os)
     self.files_handler = FilesGatherer(self.os)
-    self.projects_handler = ProjectsHandler(paths, self.os)
+    self.projects_handler = projects_handler
 
     self.run = False
     self.log_file = self.log_dir + "log-" + datetime.now().strftime('%Y-%m-%dT%H-%M-%S') + ".csv"
@@ -86,5 +79,12 @@ class Gatherer:
     self.run = False
 
 if __name__ == '__main__':
-  gatherer = Gatherer("C:/Users/GiladHecht/Workspace/workspacesManager/logs/", [os.path.abspath('.')])
+  import os
+  import sys
+  project = os.path.abspath('./src/project')
+  sys.path.insert(1, project)
+  from projectsHandler import ProjectsHandler
+
+  projects_handler = ProjectsHandler([os.path.abspath('.')], "windows")
+  gatherer = Gatherer("C:/Users/GiladHecht/Workspace/workspacesManager/logs/", projects_handler)
   gatherer.gather()

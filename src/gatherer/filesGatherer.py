@@ -5,9 +5,9 @@ from datetime import datetime
 
 parent = os.path.abspath('./src')
 sys.path.insert(1, parent)
+
 import powershellClient as PSClient
 from unknownOSWarning import unknown_OS_Warning
-from project.project import Project
 
 #%% FilesGatherer class:
 class FilesGatherer:
