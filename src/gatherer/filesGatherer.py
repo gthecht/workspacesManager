@@ -10,8 +10,8 @@ import powershellClient as PSClient
 from unknownOSWarning import unknown_OS_Warning
 from project.project import Project
 
-#%% FilesHandler class:
-class FilesHandler:
+#%% FilesGatherer class:
+class FilesGatherer:
   def __init__(self, os="windows"):
     self.os = os
     self.items = [
@@ -53,7 +53,7 @@ class FilesHandler:
 
 if __name__ == '__main__':
   now = datetime.now().isoformat()[:10]
-  files_handler = FilesHandler()
+  files_handler = FilesGatherer()
   open_files = asyncio.run(files_handler.get_open_files([os.path.abspath('.')], now))
   print("open files:")
   print(open_files)

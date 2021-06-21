@@ -1,6 +1,6 @@
 
 BUGS:
-  appsHandler.py:
+  appsGatherer.py:
     Make sure all the apps that are open, have an app from the apps df that fits them.
     Apps installed with the microsoft store aren't handled well. The are opened differently, not from the start exactly, and also it is harder to know if they are open.
     These apps use name and description of
@@ -15,8 +15,8 @@ BUGS:
 ARCHITECTURE:
   handlersManager - uses the apps handler, the explorer handler, the files handler and the url handler to see what's open and thus gather information for clustering.
   explorerHandler - retrieves information about open explorer windows
-  appsHandler     - retrieves info about open apps
-  filesHandler    - for open apps, get the files and their paths so that we can directly open the file and not the app
+  appsGatherer     - retrieves info about open apps
+  filesGatherer    - for open apps, get the files and their paths so that we can directly open the file and not the app
   urlsHandler     - irrespective of the browser, we want to get the urls that belong to the project
 
   project         - holds the data for the projects. This includes: files, (and paths), apps, and urls. For each one it has a time for when it was last opened, and how
