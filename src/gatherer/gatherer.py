@@ -3,12 +3,23 @@ from datetime import datetime
 import pandas as pd
 
 import os
-from handlersManager import HandlersManager
+import sys
+
+from appsGatherer import AppsGatherer
+from filesGatherer import FilesGatherer
+parent = os.path.abspath('./src')
+sys.path.insert(1, parent)
+from project.projectsHandler import ProjectsHandler
+
 
 class Gatherer:
-  def __init__(self, log_dir):
+  def __init__(self, log_dir, paths, os="windows"):
     self.log_dir = log_dir
-    self.handlers_manager = HandlersManager([os.path.abspath('.')])
+    self.os = os
+    self.apps_handler = AppsGatherer(self.os)
+    self.files_handler = FilesGatherer(self.os)
+    self.projects_handler = ProjectsHandler(paths, self.os)
+
     self.run = False
     self.log_file = self.log_dir + "log-" + datetime.now().strftime('%Y-%m-%dT%H-%M-%S') + ".csv"
     self.SLEEP_TIME = 30 # time to sleep between data collection - note that gathering the apps takes about 2 seconds
@@ -16,9 +27,11 @@ class Gatherer:
   def gather(self):
     self.run = True
     try:
-      self.handlers_manager.gather()
-      self.handlers_manager.save()
-      self.data = self.handlers_manager.get_apps()
+      self.gather_files()
+      self.gather_apps()
+      self.projects_handler.update(self.open_files, self.open_apps)
+      self.projects_handler.save()
+      self.data = self.open_apps
     except Exception as err:
       print("Failed to gather data with err: " + str(err))
       print("Waiting a bit, and trying to gather again")
@@ -30,9 +43,11 @@ class Gatherer:
       sleep(self.SLEEP_TIME)
       print("Gathering data")
       try:
-        self.handlers_manager.gather()
-        self.handlers_manager.save()
-        data = self.handlers_manager.get_apps()
+        self.gather_files()
+        self.gather_apps()
+        self.projects_handler.update(self.open_files, self.open_apps)
+        self.projects_handler.save()
+        data = self.open_apps
       except Exception as err:
         print("Failed to gather data with err: " + str(err))
         print("Waiting a bit, and trying to gather again")
@@ -40,6 +55,16 @@ class Gatherer:
       else:
         self.compare_data(data)
         self.data.to_csv(self.log_file, index=False)
+
+  def gather_files(self):
+    print("  open files...")
+    project_paths = self.projects_handler.get_proj_paths()
+    project_time = self.projects_handler.get_proj_start_time()
+    self.open_files = self.files_handler.get_open_files(project_paths, project_time)
+
+  def gather_apps(self):
+    print("  open apps...")
+    self.open_apps = self.apps_handler.get_open_apps()
 
   def compare_data(self, data):
     # find rows from the old that are duplicated in the new:
@@ -61,5 +86,5 @@ class Gatherer:
     self.run = False
 
 if __name__ == '__main__':
-  gatherer = Gatherer("C:/Users/GiladHecht/Workspace/workspacesManager/logs/")
+  gatherer = Gatherer("C:/Users/GiladHecht/Workspace/workspacesManager/logs/", [os.path.abspath('.')])
   gatherer.gather()
