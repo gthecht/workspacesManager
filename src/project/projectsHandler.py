@@ -4,7 +4,7 @@ import asyncio
 
 parent = os.path.abspath('./src')
 sys.path.insert(1, parent)
-from project.project import Project
+from project import Project
 
 class ProjectsHandler:
   def __init__(self, projects_paths, os="windows"):
