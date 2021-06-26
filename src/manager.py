@@ -27,15 +27,17 @@ class Manager:
     elif "linux" in sys.platform: self.os = "linux"
     else: raise TypeError("unknown system platform", sys.platform)
 
+  def run(self):
+    self.gather()
+
   def gather(self):
     self.gatherer.gather()
-    return
 
   def save(self):
     self.executor.save()
 
   def get_apps(self):
-    return self.executor.open_apps
+    return self.executor.open()["apps"]
 
 if __name__ == '__main__':
   import time
