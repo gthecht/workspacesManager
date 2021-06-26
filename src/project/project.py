@@ -109,6 +109,13 @@ class Project:
         if child_item not in self.paths:
           self.dirs.append(child_item[0])
 
+  def get_open(self):
+    open_data = {
+      "files": self.open_files,
+      "apps": self.open_apps
+    }
+    return open_data
+
   def save(self):
     data_dict = {
       "paths": self.paths,
@@ -131,7 +138,8 @@ class Project:
     # self.apps.to_csv('.librarian/files.csv')
 
   # remove some subdirectory and all its children from files
-  def remove_sub_directory(self, sub_dir):
+  def remove_sub_dir(self, sub_dir):
+    sub_dir = os.path.abspath(sub_dir)
     self.dirs = list(filter(lambda dir: sub_dir not in dir, self.dirs))
     self.files = self.files[[sub_dir not in directory for directory in self.files["Directory"]]]
     # self.files.reset_index(drop=True, inplace=True)
