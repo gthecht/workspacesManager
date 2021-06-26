@@ -148,18 +148,20 @@ class Project:
     self.forget()
 
   def files_update(self):
+    if self.open_files.empty: pass # close all files
     # find common files in open_files and self.files:
     common_files = list((set(self.files.index) & set(self.open_files.index)))
     # update relevance
     for fileName in common_files:
-      self.files.loc[fileName]["LastWriteTime"] = \
-        self.open_files[fileName]["LastWriteTime"]
-      self.files.loc[fileName]["LastAccessTime"] = \
-        self.open_files[fileName]["LastAccessTime"]
-      self.files.loc[fileName]["Relevance"] *= self.add_rate
-      self.files.loc[fileName]["Open"] = True
+      self.files.at[fileName, "LastWriteTime"] = \
+        self.open_files.at[fileName, "LastWriteTime"]
+      self.files.at[fileName, "LastAccessTime"] = \
+        self.open_files.at[fileName, "LastAccessTime"]
+      self.files.at[fileName, "Relevance"] *= self.add_rate
+      self.files.at[fileName, "Open"] = True
 
   def apps_update(self):
+    if self.open_apps.empty: pass
     pass
 
   def forget(self):
