@@ -3,7 +3,10 @@ import os
 
 project = os.path.abspath('./src/project')
 sys.path.insert(1, project)
+executor = os.path.abspath('./src/executor')
+sys.path.insert(1, executor)
 from projectsHandler import ProjectsHandler
+from executor import Executor
 
 gatherer = os.path.abspath('./src/gatherer')
 sys.path.insert(1, gatherer)
@@ -16,6 +19,7 @@ class Manager:
 
     self.projects_handler = ProjectsHandler(paths, self.os)
     self.gatherer = Gatherer(self.log_dir,self.projects_handler, self.os)
+    self.executor = Executor(self.projects_handler, self.os)
 
   # Get operating system:
   def get_os(self):
@@ -28,17 +32,17 @@ class Manager:
     return
 
   def save(self):
-    self.gatherer.save()
+    self.executor.save()
 
   def get_apps(self):
-    return self.gatherer.open_apps
+    return self.executor.open_apps
 
 if __name__ == '__main__':
   import time
   t0 = time.perf_counter()
   log_dir = "C:/Users/GiladHecht/Workspace/workspacesManager/logs/"
   manager = Manager([os.path.abspath('.')], log_dir)
-  manager.projects_handler.set_current(name="workspacesManager")
+  manager.executor.set_current(name="workspacesManager")
   print("initialization took: ", time.perf_counter() - t0, "seconds")
   time.sleep(10)
   print("Gathering:")
@@ -48,4 +52,3 @@ if __name__ == '__main__':
   t2 = time.perf_counter()
   manager.save()
   print("Saving took: ", time.perf_counter() - t2, "seconds")
-
