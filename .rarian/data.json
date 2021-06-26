@@ -14,6 +14,7 @@
     "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src",
     "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\__pycache__",
     "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\cpp",
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\executor",
     "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\gatherer",
     "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\gatherer\\__pycache__",
     "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\project",
@@ -25,6 +26,6 @@
   "paths": [
     "C:\\Users\\GiladHecht\\Workspace\\workspacesManager"
   ],
-  "start_time": "2021-06-21T23:00:38.246752",
+  "start_time": "2021-06-26T17:55:27.393777",
   "type": "test"
 }
