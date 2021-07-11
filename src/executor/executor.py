@@ -86,6 +86,7 @@ class Executor:
     return None
 
   def get_more(self, member, n=1): # can also get previous if n<0
+    max = len(self.data[member])
     n0 = self.bookmarks[member]
     n1 = n0 + n
     self.bookmarks[member] = n1
@@ -93,6 +94,9 @@ class Executor:
       n0 = n0 + n1
       n1 = n0 - n1
       n0 = n0 - n1
+    if n1 > max:
+      n0 = n1 - abs(n)
+      n1 = max
     return self.data[member][n0:n1]
 
 if __name__ == '__main__':
