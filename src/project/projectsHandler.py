@@ -105,15 +105,15 @@ class ProjectsHandler:
     return list(self.projects.keys())
 
   def get_project_data(self, member, sort_by="Relevance"):
-    if self.current is None: return None
     try:
+      if member == "projects": return self.get_all_projects()
+      if self.current is None: return None
       if member == "files":
         data = self.projects[self.current].files
         data.sort_values(by=sort_by, ascending=False, inplace=False)
       elif member == "apps": data = self.projects[self.current].apps
       elif member == "notes": data = self.projects[self.current].notes
       elif member == "urls": data = self.projects[self.current].urls
-      elif member == "projects": data = self.get_all_projects()
       else: raise KeyError("undefined data member")
       return data
     except Exception as err:
