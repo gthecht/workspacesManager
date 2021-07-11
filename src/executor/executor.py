@@ -79,6 +79,10 @@ class Executor:
       self.data[member] = data
       self.bookmarks[member] = min(n, len(data))
       return self.data[member][:n]
+    elif isinstance(data, list):
+      self.data[member] = data
+      self.bookmarks[member] = min(n, len(data))
+      return self.data[member][:n]
     return None
 
   def get_more(self, member, n=1): # can also get previous if n<0
