@@ -71,12 +71,11 @@ class ProjectsHandler:
     if name in self.projects.keys():
       print("project of name {} already exists", name)
     else:
-      return self.projects_handler.new_project(
-        paths, name, proj_type, author, start_time, dirs, files, apps
-    )
+      project = Project(paths, name, proj_type, author, start_time, dirs, files, apps)
+      self.projects[project.name] = project
 
   def remove_sub_dir(self, path):
-
+    "Removes sub directories, for instance when a sub directory is a project"
     self.projects[self.current].remove_sub_dir(path)
 
   # Gather:
