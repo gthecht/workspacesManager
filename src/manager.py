@@ -1,6 +1,8 @@
 import sys
 import os
 
+from ui.cliClient import CLIent
+
 project = os.path.abspath('./src/project')
 sys.path.insert(1, project)
 executor = os.path.abspath('./src/executor')
@@ -20,6 +22,7 @@ class Manager:
     self.projects_handler = ProjectsHandler(paths, self.os)
     self.gatherer = Gatherer(self.log_dir,self.projects_handler, self.os)
     self.executor = Executor(self.projects_handler, self.os)
+    self.client = CLIent(self.executor)
 
   # Get operating system:
   def get_os(self):
