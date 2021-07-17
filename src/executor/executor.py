@@ -1,4 +1,6 @@
 import pandas as pd
+import queue
+
 class Executor:
   def __init__(self, projects_handler, os="windows") -> None:
     self.projects_handler = projects_handler
@@ -11,18 +13,48 @@ class Executor:
       "projects": None
     }
     self.bookmarks = self.data.copy() #empty dictionary
+    self.reply_q = queue.Queue()
+
+  def add_job(self, job):
+    self.projects_handler.q.put(job)
+    if "reply_q" not in job.keys(): return
+    else:
+      reply = None
+      while self.reply_q.empty():
+        continue
+      reply = self.reply_q.get()
+      return reply
 
   # Open and close:
   def set_current(self, name=None, path=None):
     "Set current project"
+    job = {
+      "method": "set_current",
+      "args": {
+        "name": name,
+        "path": path
+      },
+      "reply_q": self.reply_q
+    }
+    return self.add_job(job)
     self.projects_handler.set_current(name, path)
 
   def save(self):
     "Save the projects"
+    job = {
+      "method": "save",
+      "args": {}
+    }
+    return self.add_job(job)
     self.projects_handler.save()
 
   def close_project(self):
     "Close current project"
+    job = {
+      "method": "close_project",
+      "args": {}
+    }
+    return self.add_job(job)
     self.projects_handler.close_project()
 
   # Insert new:
@@ -39,6 +71,21 @@ class Executor:
   ):
     "Create new project"
     # if fields are missing, query for them...
+    job = {
+      "method": "new_project",
+      "args": {
+        "paths": paths,
+        "name": name,
+        "proj_type": proj_type,
+        "author": author,
+        "start_time": start_time,
+        "dirs": dirs,
+        "files": files,
+        "apps": apps
+      },
+      "reply_q": self.reply_q
+    }
+    return self.add_job(job)
     return self.projects_handler.new_project(
       paths, name, proj_type, author, start_time, dirs, files, apps
     )
@@ -57,15 +104,35 @@ class Executor:
     raise NotImplementedError
 
   def remove_sub_dir(self, path):
+    job = {
+      "method": "remove_sub_dir",
+      "args": {
+        "path": path
+      },
+      "reply_q": self.reply_q
+    }
+    return self.add_job(job)
     self.projects_handler.remove_sub_dir(path)
 
   # Get:
   def get_open(self):
     "Get the open project, files, apps and more"
+    job = {
+      "method": "get_open",
+      "args": {},
+      "reply_q": self.reply_q
+    }
+    return self.add_job(job)
     return self.projects_handler.get_open()
 
   def get_current(self):
     "Get the current project"
+    job = {
+      "method": "get_current",
+      "args": {},
+      "reply_q": self.reply_q
+    }
+    return self.add_job(job)
     return self.projects_handler.get_current()
 
   def get_data(self, member, n=1, sort_by="Relevance"):
@@ -74,7 +141,16 @@ class Executor:
       assert n > 0
     except AssertionError:
       raise AssertionError("number must be greater than 0")
-    data = self.projects_handler.get_project_data(member, sort_by)
+
+    job = {
+      "method": "get_project_data",
+      "args": {
+        "member": member,
+        "sort_by": sort_by
+         },
+      "reply_q": self.reply_q
+    }
+    data = self.add_job(job)
     if isinstance(data, pd.DataFrame):
       self.data[member] = data
       self.bookmarks[member] = min(n, len(data))
@@ -108,6 +184,7 @@ if __name__ == '__main__':
 
   projects_handler = ProjectsHandler([os.path.abspath('.')], "windows")
   executor = Executor(projects_handler)
+  projects_handler.start()
 
   executor.set_current(name="workspacesManager")
   assert executor.get_current() == "workspacesManager"
