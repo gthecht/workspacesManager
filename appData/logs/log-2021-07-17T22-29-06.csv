@@ -1,0 +1,12 @@
+Id,App,Name,Description,MainWindowTitle,StartTime,EndTime,Path
+10608,Windows PowerShell,ShellExperienceHost,Windows Shell Experience Host,Windows Shell Experience Host,17-Jul-21 9:21:00 PM,,C:\WINDOWS\SystemApps\ShellExperienceHost_cw5n1h2txyewy\ShellExperienceHost.exe
+11996,Windows PowerShell,WindowsTerminal,WindowsTerminal.exe,workspacesManager [master] ~ PowerShell 7.1 (11984),17-Jul-21 10:23:48 PM,,C:\Program Files\WindowsApps\Microsoft.WindowsTerminal_1.8.1521.0_x64__8wekyb3d8bbwe\WindowsTerminal.exe
+14692,iTunes,iTunes,iTunes,iTunes,17-Jul-21 9:21:33 PM,,C:\Program Files\iTunes\iTunes.exe
+15672,,WWAHost,Microsoft WWA Host,Netflix,17-Jul-21 9:24:14 PM,,C:\WINDOWS\system32\wwahost.exe
+15900,,SystemSettings,Settings,"CN=Microsoft Windows, O=Microsoft Corporation, L=Redmond, S=Washington, C=US",17-Jul-21 9:24:33 PM,,C:\Windows\ImmersiveControlPanel\SystemSettings.exe
+16080,Visual Studio Code,Code,Visual Studio Code,main.py - workspacesManager - Visual Studio Code,17-Jul-21 10:23:57 PM,,C:\Users\GiladHecht\AppData\Local\Programs\Microsoft VS Code\Code.exe
+16116,Firefox,firefox,Firefox,Francis Poulenc - Piano Concerto FP. 146 (4 MILLION VIEWS FINALE) - YouTube - Mozilla Firefox,17-Jul-21 9:21:44 PM,,C:\Program Files\Mozilla Firefox\firefox.exe
+2104,,ApplicationFrameHost,Application Frame Host,Settings,17-Jul-21 9:24:03 PM,,C:\WINDOWS\system32\ApplicationFrameHost.exe
+8800,Microsoft Store,WinStore.App,Store,Microsoft Store,17-Jul-21 9:24:03 PM,,C:\Program Files\WindowsApps\Microsoft.WindowsStore_12105.1001.23.0_x64__8wekyb3d8bbwe\WinStore.App.exe
+9440,Microsoft Edge,TextInputHost,,Microsoft Text Input Application,17-Jul-21 9:20:58 PM,,C:\WINDOWS\SystemApps\MicrosoftWindows.Client.CBS_cw5n1h2txyewy\InputApp\TextInputHost.exe
+900,File Explorer,Rarian,Windows Explorer,Rarian,17-Jul-21 9:20:56 PM,,file:///C:/Users/GiladHecht/AppData/Roaming/Rarian

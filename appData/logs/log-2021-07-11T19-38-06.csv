@@ -1,0 +1,19 @@
+Id,App,Name,Description,MainWindowTitle,StartTime,EndTime,Path
+16400,,ApplicationFrameHost,Application Frame Host,Netflix,11-Jul-21 7:25:32 PM,,C:\WINDOWS\system32\ApplicationFrameHost.exe
+21112,,Rarian,Windows Explorer,Rarian,2021-07-11T19:39:27,2021-07-11T19:39:59,file:///C:/Users/GiladHecht/AppData/Roaming/Rarian
+23456,,WWAHost,Microsoft WWA Host,Netflix,11-Jul-21 7:29:44 PM,,C:\WINDOWS\system32\wwahost.exe
+21112,,logs,Windows Explorer,logs,2021-07-11T19:39:59,2021-07-11T19:40:32,file:///C:/Users/GiladHecht/AppData/Roaming/Rarian/logs
+21112,,logs,Windows Explorer,logs,2021-07-11T19:40:32,,file:///C:/Users/GiladHecht/AppData/Roaming/Rarian/logs
+21112,,workspacesManager,Windows Explorer,workspacesManager,11-Jul-21 7:24:19 PM,,file:///C:/Users/GiladHecht/Workspace/workspacesManager
+6412,File Explorer,Rarian,Windows Explorer,Rarian,2021-07-11T19:39:27,2021-07-11T19:39:59,file:///C:/Users/GiladHecht/AppData/Roaming/Rarian
+6412,File Explorer,logs,Windows Explorer,logs,2021-07-11T19:39:59,2021-07-11T19:40:32,file:///C:/Users/GiladHecht/AppData/Roaming/Rarian/logs
+6412,File Explorer,logs,Windows Explorer,logs,2021-07-11T19:40:32,,file:///C:/Users/GiladHecht/AppData/Roaming/Rarian/logs
+6412,File Explorer,workspacesManager,Windows Explorer,workspacesManager,11-Jul-21 7:20:10 PM,,file:///C:/Users/GiladHecht/Workspace/workspacesManager
+19660,Firefox,firefox,Firefox,shell - Opening file with spaces in Windows via Command Prompt - Stack Overflow - Mozilla Firefox,11-Jul-21 7:23:58 PM,2021-07-11T19:39:59,C:\Program Files\Mozilla Firefox\firefox.exe
+19660,Firefox,firefox,Firefox,Add an app to run automatically at startup in Windows 10 - Mozilla Firefox,2021-07-11T19:39:59,2021-07-11T19:40:32,C:\Program Files\Mozilla Firefox\firefox.exe
+19660,Firefox,firefox,Firefox,shell - Opening file with spaces in Windows via Command Prompt - Stack Overflow - Mozilla Firefox,2021-07-11T19:40:32,,C:\Program Files\Mozilla Firefox\firefox.exe
+12988,Microsoft Edge,TextInputHost,,Microsoft Text Input Application,11-Jul-21 7:20:17 PM,,C:\WINDOWS\SystemApps\MicrosoftWindows.Client.CBS_cw5n1h2txyewy\InputApp\TextInputHost.exe
+22796,Microsoft Store,WinStore.App,Store,Microsoft Store,11-Jul-21 7:29:24 PM,,C:\Program Files\WindowsApps\Microsoft.WindowsStore_12105.1001.23.0_x64__8wekyb3d8bbwe\WinStore.App.exe
+15880,Visual Studio Code,Code,Visual Studio Code,main.py - workspacesManager - Visual Studio Code,11-Jul-21 7:24:16 PM,2021-07-11T19:40:32,C:\Users\GiladHecht\AppData\Local\Programs\Microsoft VS Code\Code.exe
+15880,Visual Studio Code,Code,Visual Studio Code,executor.py - workspacesManager - Visual Studio Code,2021-07-11T19:40:32,,C:\Users\GiladHecht\AppData\Local\Programs\Microsoft VS Code\Code.exe
+7616,Windows Terminal,WindowsTerminal,WindowsTerminal.exe,"Command Prompt - ""C:\Users\GiladHecht\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\gatherAppsData""",11-Jul-21 7:24:03 PM,,C:\Program Files\WindowsApps\Microsoft.WindowsTerminal_1.8.1521.0_x64__8wekyb3d8bbwe\WindowsTerminal.exe

@@ -1,0 +1,12 @@
+Id,App,Name,Description,MainWindowTitle,StartTime,EndTime,Path
+54936,,ApplicationFrameHost,Application Frame Host,Settings,28-Jun-21 7:13:15 PM,,C:\WINDOWS\system32\ApplicationFrameHost.exe
+41764,,PowerToys,,,28-Jun-21 7:11:25 PM,,
+54664,,SystemSettings,Settings,"CN=Microsoft Windows, O=Microsoft Corporation, L=Redmond, S=Washington, C=US",28-Jun-21 7:13:50 PM,,C:\Windows\ImmersiveControlPanel\SystemSettings.exe
+55468,,WWAHost,Microsoft WWA Host,Netflix,28-Jun-21 7:13:29 PM,,C:\WINDOWS\system32\wwahost.exe
+56352,Calculator,Calculator,Calculator.exe,Calculator,28-Jun-21 7:13:40 PM,,C:\Program Files\WindowsApps\Microsoft.WindowsCalculator_10.2103.8.0_x64__8wekyb3d8bbwe\Calculator.exe
+40584,File Explorer,logs,Windows Explorer,logs,28-Jun-21 7:11:22 PM,,file:///C:/Users/GiladHecht/AppData/Roaming/Rarian/logs
+41832,Microsoft Edge,TextInputHost,,Microsoft Text Input Application,28-Jun-21 7:11:25 PM,,C:\WINDOWS\SystemApps\MicrosoftWindows.Client.CBS_cw5n1h2txyewy\InputApp\TextInputHost.exe
+52148,Microsoft Store,WinStore.App,Store,Microsoft Store,28-Jun-21 7:13:15 PM,,C:\Program Files\WindowsApps\Microsoft.WindowsStore_12105.1001.23.0_x64__8wekyb3d8bbwe\WinStore.App.exe
+50456,Visual Studio Code,Code,Visual Studio Code,run.bat - workspacesManager - Visual Studio Code,28-Jun-21 8:02:42 PM,,C:\Users\GiladHecht\AppData\Local\Programs\Microsoft VS Code\Code.exe
+53824,Windows PowerShell,WindowsTerminal,WindowsTerminal.exe,workspacesManager [cli] ~ PowerShell 7.1 (59788),28-Jun-21 8:01:15 PM,,C:\Program Files\WindowsApps\Microsoft.WindowsTerminal_1.8.1521.0_x64__8wekyb3d8bbwe\WindowsTerminal.exe
+50992,Windows PowerShell,cmd,Windows Command Processor,C:\WINDOWS\system32\cmd.exe,28-Jun-21 7:11:45,,PM C:\WINDOWS\system32\cmd.exe

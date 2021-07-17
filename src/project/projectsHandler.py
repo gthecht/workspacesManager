@@ -145,7 +145,8 @@ class ProjectsHandler(threading.Thread):
     self.running = False
 
 if __name__ == '__main__':
-  handler = ProjectsHandler([os.path.abspath('.'), os.path.abspath('.'), "C:/"])
+  data_file = os.path.join(os.path.abspath('.'), "appData", "data.json")
+  handler = ProjectsHandler([os.path.abspath('.'), os.path.abspath('.'), "C:/"], data_file)
   handler.set_current(name="workspacesManager")
   print("current project:", handler.get_current())
   print("projects:", handler.get_all_projects())

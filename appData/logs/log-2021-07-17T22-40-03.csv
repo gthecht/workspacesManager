@@ -1,0 +1,53 @@
+Id,App,Name,Description,MainWindowTitle,StartTime,EndTime,Path
+2104,,ApplicationFrameHost,Application Frame Host,Settings,17-Jul-21 9:24:03 PM,,C:\WINDOWS\system32\ApplicationFrameHost.exe
+15900,,SystemSettings,Settings,"CN=Microsoft Windows, O=Microsoft Corporation, L=Redmond, S=Washington, C=US",17-Jul-21 9:24:33 PM,,C:\Windows\ImmersiveControlPanel\SystemSettings.exe
+15672,,WWAHost,Microsoft WWA Host,Netflix,17-Jul-21 9:24:14 PM,,C:\WINDOWS\system32\wwahost.exe
+900,File Explorer,Rarian,Windows Explorer,Rarian,17-Jul-21 9:20:56 PM,2021-07-17T22:40:53,file:///C:/Users/GiladHecht/AppData/Roaming/Rarian
+900,File Explorer,Rarian,Windows Explorer,Rarian,2021-07-17T22:41:31,2021-07-17T22:42:09,file:///C:/Users/GiladHecht/AppData/Roaming/Rarian
+900,File Explorer,Rarian,Windows Explorer,Rarian,2021-07-17T22:42:09,2021-07-17T22:42:47,file:///C:/Users/GiladHecht/AppData/Roaming/Rarian
+900,File Explorer,Rarian,Windows Explorer,Rarian,2021-07-17T22:42:47,2021-07-17T22:43:25,file:///C:/Users/GiladHecht/AppData/Roaming/Rarian
+900,File Explorer,Rarian,Windows Explorer,Rarian,2021-07-17T22:43:25,2021-07-17T22:44:04,file:///C:/Users/GiladHecht/AppData/Roaming/Rarian
+900,File Explorer,Rarian,Windows Explorer,Rarian,2021-07-17T22:44:04,2021-07-17T22:44:42,file:///C:/Users/GiladHecht/AppData/Roaming/Rarian
+900,File Explorer,Rarian,Windows Explorer,Rarian,2021-07-17T22:44:42,2021-07-17T22:45:20,file:///C:/Users/GiladHecht/AppData/Roaming/Rarian
+900,File Explorer,Rarian,Windows Explorer,Rarian,2021-07-17T22:45:20,2021-07-17T22:45:58,file:///C:/Users/GiladHecht/AppData/Roaming/Rarian
+900,File Explorer,Rarian,Windows Explorer,Rarian,2021-07-17T22:45:58,2021-07-17T22:46:37,file:///C:/Users/GiladHecht/AppData/Roaming/Rarian
+900,File Explorer,Rarian,Windows Explorer,Rarian,2021-07-17T22:46:37,2021-07-17T22:47:15,file:///C:/Users/GiladHecht/AppData/Roaming/Rarian
+900,File Explorer,Rarian,Windows Explorer,Rarian,2021-07-17T22:47:15,2021-07-17T22:47:53,file:///C:/Users/GiladHecht/AppData/Roaming/Rarian
+900,File Explorer,Rarian,Windows Explorer,Rarian,2021-07-17T22:47:53,2021-07-17T22:48:31,file:///C:/Users/GiladHecht/AppData/Roaming/Rarian
+900,File Explorer,Rarian,Windows Explorer,Rarian,2021-07-17T22:48:31,2021-07-17T22:49:09,file:///C:/Users/GiladHecht/AppData/Roaming/Rarian
+900,File Explorer,Rarian,Windows Explorer,Rarian,2021-07-17T22:49:09,,file:///C:/Users/GiladHecht/AppData/Roaming/Rarian
+900,File Explorer,Writing,Windows Explorer,Writing,2021-07-17T22:42:09,2021-07-17T22:42:47,file:///C:/Users/GiladHecht/Workspace/writing/twisted-strands/Writing
+900,File Explorer,twisted-strands,Windows Explorer,twisted-strands,2021-07-17T22:40:53,2021-07-17T22:41:31,file:///C:/Users/GiladHecht/Workspace/writing/twisted-strands
+900,File Explorer,twisted-strands,Windows Explorer,twisted-strands,2021-07-17T22:41:31,2021-07-17T22:42:09,file:///C:/Users/GiladHecht/Workspace/writing/twisted-strands
+900,File Explorer,twisted-strands,Windows Explorer,twisted-strands,2021-07-17T22:42:47,2021-07-17T22:43:25,file:///C:/Users/GiladHecht/Workspace/writing/twisted-strands
+900,File Explorer,twisted-strands,Windows Explorer,twisted-strands,2021-07-17T22:43:25,2021-07-17T22:44:04,file:///C:/Users/GiladHecht/Workspace/writing/twisted-strands
+900,File Explorer,twisted-strands,Windows Explorer,twisted-strands,2021-07-17T22:44:04,2021-07-17T22:44:42,file:///C:/Users/GiladHecht/Workspace/writing/twisted-strands
+900,File Explorer,twisted-strands,Windows Explorer,twisted-strands,2021-07-17T22:44:42,2021-07-17T22:45:20,file:///C:/Users/GiladHecht/Workspace/writing/twisted-strands
+900,File Explorer,twisted-strands,Windows Explorer,twisted-strands,2021-07-17T22:45:20,2021-07-17T22:45:58,file:///C:/Users/GiladHecht/Workspace/writing/twisted-strands
+900,File Explorer,twisted-strands,Windows Explorer,twisted-strands,2021-07-17T22:45:58,2021-07-17T22:46:37,file:///C:/Users/GiladHecht/Workspace/writing/twisted-strands
+900,File Explorer,twisted-strands,Windows Explorer,twisted-strands,2021-07-17T22:46:37,2021-07-17T22:47:15,file:///C:/Users/GiladHecht/Workspace/writing/twisted-strands
+900,File Explorer,twisted-strands,Windows Explorer,twisted-strands,2021-07-17T22:47:15,2021-07-17T22:47:53,file:///C:/Users/GiladHecht/Workspace/writing/twisted-strands
+900,File Explorer,twisted-strands,Windows Explorer,twisted-strands,2021-07-17T22:47:53,2021-07-17T22:48:31,file:///C:/Users/GiladHecht/Workspace/writing/twisted-strands
+900,File Explorer,twisted-strands,Windows Explorer,twisted-strands,2021-07-17T22:48:31,2021-07-17T22:49:09,file:///C:/Users/GiladHecht/Workspace/writing/twisted-strands
+900,File Explorer,twisted-strands,Windows Explorer,twisted-strands,2021-07-17T22:49:09,,file:///C:/Users/GiladHecht/Workspace/writing/twisted-strands
+16116,Firefox,firefox,Firefox,print pdf without photos at DuckDuckGo - Mozilla Firefox,17-Jul-21 9:21:44 PM,,C:\Program Files\Mozilla Firefox\firefox.exe
+9440,Microsoft Edge,TextInputHost,,Microsoft Text Input Application,17-Jul-21 9:20:58 PM,,C:\WINDOWS\SystemApps\MicrosoftWindows.Client.CBS_cw5n1h2txyewy\InputApp\TextInputHost.exe
+8800,Microsoft Store,WinStore.App,Store,Microsoft Store,17-Jul-21 9:24:03 PM,,C:\Program Files\WindowsApps\Microsoft.WindowsStore_12105.1001.23.0_x64__8wekyb3d8bbwe\WinStore.App.exe
+16080,Visual Studio Code,Code,Visual Studio Code,gatherer.py - workspacesManager - Visual Studio Code,17-Jul-21 10:23:57 PM,2021-07-17T22:40:53,C:\Users\GiladHecht\AppData\Local\Programs\Microsoft VS Code\Code.exe
+16080,Visual Studio Code,Code,Visual Studio Code,projectsHandler.py - workspacesManager - Visual Studio Code,2021-07-17T22:40:53,2021-07-17T22:41:31,C:\Users\GiladHecht\AppData\Local\Programs\Microsoft VS Code\Code.exe
+16080,Visual Studio Code,Code,Visual Studio Code,projectsHandler.py - workspacesManager - Visual Studio Code,2021-07-17T22:41:31,2021-07-17T22:42:09,C:\Users\GiladHecht\AppData\Local\Programs\Microsoft VS Code\Code.exe
+16080,Visual Studio Code,Code,Visual Studio Code,projectsHandler.py - workspacesManager - Visual Studio Code,2021-07-17T22:42:09,2021-07-17T22:42:47,C:\Users\GiladHecht\AppData\Local\Programs\Microsoft VS Code\Code.exe
+16080,Visual Studio Code,Code,Visual Studio Code,projectsHandler.py - workspacesManager - Visual Studio Code,2021-07-17T22:42:47,2021-07-17T22:43:25,C:\Users\GiladHecht\AppData\Local\Programs\Microsoft VS Code\Code.exe
+16080,Visual Studio Code,Code,Visual Studio Code,manager.py - workspacesManager - Visual Studio Code,2021-07-17T22:43:25,2021-07-17T22:44:04,C:\Users\GiladHecht\AppData\Local\Programs\Microsoft VS Code\Code.exe
+16080,Visual Studio Code,Code,Visual Studio Code,? manager.py - workspacesManager - Visual Studio Code,2021-07-17T22:44:04,2021-07-17T22:44:42,C:\Users\GiladHecht\AppData\Local\Programs\Microsoft VS Code\Code.exe
+16080,Visual Studio Code,Code,Visual Studio Code,? manager.py - workspacesManager - Visual Studio Code,2021-07-17T22:44:42,2021-07-17T22:45:20,C:\Users\GiladHecht\AppData\Local\Programs\Microsoft VS Code\Code.exe
+16080,Visual Studio Code,Code,Visual Studio Code,? manager.py - workspacesManager - Visual Studio Code,2021-07-17T22:45:20,2021-07-17T22:45:58,C:\Users\GiladHecht\AppData\Local\Programs\Microsoft VS Code\Code.exe
+16080,Visual Studio Code,Code,Visual Studio Code,? manager.py - workspacesManager - Visual Studio Code,2021-07-17T22:45:58,2021-07-17T22:46:37,C:\Users\GiladHecht\AppData\Local\Programs\Microsoft VS Code\Code.exe
+16080,Visual Studio Code,Code,Visual Studio Code,manager.py - workspacesManager - Visual Studio Code,2021-07-17T22:46:37,2021-07-17T22:47:15,C:\Users\GiladHecht\AppData\Local\Programs\Microsoft VS Code\Code.exe
+16080,Visual Studio Code,Code,Visual Studio Code,? manager.py - workspacesManager - Visual Studio Code,2021-07-17T22:47:15,2021-07-17T22:47:53,C:\Users\GiladHecht\AppData\Local\Programs\Microsoft VS Code\Code.exe
+16080,Visual Studio Code,Code,Visual Studio Code,? manager.py - workspacesManager - Visual Studio Code,2021-07-17T22:47:53,2021-07-17T22:48:31,C:\Users\GiladHecht\AppData\Local\Programs\Microsoft VS Code\Code.exe
+16080,Visual Studio Code,Code,Visual Studio Code,? Untitled-1 - workspacesManager - Visual Studio Code,2021-07-17T22:48:31,2021-07-17T22:49:09,C:\Users\GiladHecht\AppData\Local\Programs\Microsoft VS Code\Code.exe
+16080,Visual Studio Code,Code,Visual Studio Code,? Untitled-1 - workspacesManager - Visual Studio Code,2021-07-17T22:49:09,,C:\Users\GiladHecht\AppData\Local\Programs\Microsoft VS Code\Code.exe
+10608,Windows PowerShell,ShellExperienceHost,Windows Shell Experience Host,Windows Shell Experience Host,17-Jul-21 9:21:00 PM,,C:\WINDOWS\SystemApps\ShellExperienceHost_cw5n1h2txyewy\ShellExperienceHost.exe
+11996,Windows PowerShell,WindowsTerminal,WindowsTerminal.exe,workspacesManager [master] ~ PowerShell 7.1 (11984),17-Jul-21 10:23:48 PM,,C:\Program Files\WindowsApps\Microsoft.WindowsTerminal_1.8.1521.0_x64__8wekyb3d8bbwe\WindowsTerminal.exe
+14692,iTunes,iTunes,iTunes,iTunes,17-Jul-21 9:21:33 PM,,C:\Program Files\iTunes\iTunes.exe

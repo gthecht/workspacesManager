@@ -58,8 +58,8 @@ class Manager:
 if __name__ == '__main__':
   import time
   t0 = time.perf_counter()
-  log_dir = "C:/Users/GiladHecht/Workspace/workspacesManager/logs/"
-  manager = Manager([os.path.abspath('.')], log_dir)
+  data_dir = "C:/Users/GiladHecht/Workspace/workspacesManager/appData"
+  manager = Manager(data_dir)
   manager.executor.set_current(name="workspacesManager")
   print("initialization took: ", time.perf_counter() - t0, "seconds")
   time.sleep(10)
