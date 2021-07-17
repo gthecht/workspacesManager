@@ -17,8 +17,10 @@ class CLIent(threading.Thread):
       "insert_note": "Write a note",
       "get_notes": "Read notes",
       "create_project": "Create a new project",
-      "stop": "stop"
+      "quit": "quit"
     }
+    self.more = ['m', 'more', 'mor']
+    self.cancel = ['c', 'cancel', 'cancl']
     super().__init__(name="client")
 
   def run(self):
@@ -30,7 +32,7 @@ class CLIent(threading.Thread):
         method = getattr(self, self.action)
         method()
 
-  def stop(self):
+  def quit(self):
     print("Byebye")
     self.running = False
 
@@ -43,11 +45,7 @@ class CLIent(threading.Thread):
       counter += 1
 
     while True:
-      user_input = input("Type the number of the action you wish to choose, or 'cancel' to cancel:\n")
-      if user_input == "cancel":
-        print("You have chosen not to take an action")
-        print(self.end_segment)
-        return None
+      user_input = input("Type [number] of your chosen action:\n")
       try:
         action = int(user_input)
         if action < counter and action > -1: break
@@ -84,12 +82,12 @@ class CLIent(threading.Thread):
 
     while True:
       user_input = input("Type the number of the one you wish to open,\n" +
-                      "or 'more' for more options, or 'cancel' to cancel:\n")
-      if user_input == "cancel":
+                      "or 'm\more' for more options, or 'c\cancel' to cancel:\n")
+      if user_input.lower() in self.cancel:
         print("You have chosen not to open " + singular)
         print(self.end_segment)
         return None
-      elif user_input == "more":
+      elif user_input.lower() in self.more:
         selected = self.executor.get_more(plural, self.batch)
         print("Less recent " + plural + ":")
         printable = self.print_selected(selected, plural)
@@ -113,7 +111,21 @@ class CLIent(threading.Thread):
   # Actions:
   def get_open(self):
     open = self.executor.get_open()
-    print(open)
+    self.display_data(open)
+
+  def display_data(self, data):
+    if isinstance(data, pd.DataFrame):
+      for name in list(data["Name"]): print(f'- {name}')
+      print('\n')
+    elif isinstance(data, dict):
+      for key in data.keys():
+        print(f'{key}:')
+        self.display_data(data[key])
+    elif isinstance(data, list):
+      if len(data) >= 1:
+        for el in data: print(f'- {el}')
+      else: print('[]')
+    else: print(data)
 
   def open_project(self):
     project_name = self.choose_data("projects", "project")
@@ -194,9 +206,3 @@ if __name__ == '__main__':
   client = CLIent(executor)
   client.start()
   client.join()
-  # action = client.choose_action()
-  # print(action)
-  # project = client.open_project(["first", "second", "third", "fourth", "fifth", "six", "seven"])
-  # project = client.open_project(["first", "second", "third"])
-  # note = client.insert_note()
-  # client.get_notes()
