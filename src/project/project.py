@@ -14,7 +14,7 @@ class Project:
   # load existing project from some path
   def load(path):
     if not os.path.isdir(os.path.join(path, ".rarian")):
-      raise FileNotFoundError("Path != a rarian project")
+      raise FileNotFoundError("Path is not a rarian project")
     data_path = os.path.join(path, ".rarian", "data.json")
     with open(data_path, 'r') as files_csv:
       files_str = files_csv.read()
@@ -47,6 +47,7 @@ class Project:
     add_rate=1.1
   ):
     self.paths = paths
+    self.rarian_path = os.path.join(self.paths[0], ".rarian")
     self.name = name
     if name == None: self.name = paths[0] # change later to just the directory
     self.author = author
@@ -126,15 +127,15 @@ class Project:
       "dirs": self.dirs,
       "apps": self.apps
     }
-    if not os.path.exists(os.path.abspath('.rarian')):
+    if not os.path.exists(self.rarian_path):
       try:
-        os.makedirs(os.path.abspath('.rarian'))
+        os.makedirs(self.rarian_path)
       except OSError as err: # Guard against race condition
         raise err
 
-    with open('.rarian/data.json', 'w') as data_file:
+    with open(os.path.join(self.rarian_path, 'data.json'), 'w') as data_file:
       json.dump(data_dict, data_file, sort_keys=True, indent=2)
-    self.files.to_csv('.rarian/files.csv')
+    self.files.to_csv(os.path.join(self.rarian_path, 'files.csv'))
     # self.apps.to_csv('.librarian/files.csv')
 
   # remove some subdirectory and all its children from files
@@ -145,7 +146,7 @@ class Project:
     # self.files.reset_index(drop=True, inplace=True)
 
   def update(self, open_files, open_apps):
-    if open_files.index.name != "FullName":
+    if not open_files.empty and open_files.index.name != "FullName":
       open_files.set_index("FullName", inplace=True)
     # if "FullName" not in open_files.index.names:
       # open_files.set_index("FullName", inplace=True)
