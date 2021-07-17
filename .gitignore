@@ -137,3 +137,6 @@ dmypy.json
 
 # log files from tests
 logs/*
+
+# Rarian
+.rarian/files.csv
