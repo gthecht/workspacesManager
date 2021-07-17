@@ -1,5 +1,6 @@
 import sys
 import os
+import json
 
 from ui.cliClient import CLIent
 
@@ -15,11 +16,13 @@ sys.path.insert(1, gatherer)
 from gatherer import Gatherer
 
 class Manager:
-  def __init__(self, paths, log_dir):
+  def __init__(self, data_dir):
     self.get_os()
-    self.log_dir = log_dir
+    self.data_dir = data_dir
+    self.log_dir = os.path.join(data_dir, "logs")
+    self.load_data()
 
-    self.projects_handler = ProjectsHandler(paths, self.os)
+    self.projects_handler = ProjectsHandler(self.projects, self.data_file, self.os)
     self.gatherer = Gatherer(self.log_dir,self.projects_handler, self.os)
     self.executor = Executor(self.projects_handler, self.os)
     self.client = CLIent(self.executor)
@@ -29,6 +32,14 @@ class Manager:
     if "win" in sys.platform: self.os = "windows"
     elif "linux" in sys.platform: self.os = "linux"
     else: raise TypeError("unknown system platform", sys.platform)
+
+  # Load project data:
+  def load_data(self):
+    self.data_file = os.path.join(self.data_dir, "data.json")
+    with open(self.data_file, 'r') as data_json:
+      data_str = data_json.read()
+    data = json.loads(data_str)
+    self.projects = data["projects"]
 
   def run(self):
     self.projects_handler.start()

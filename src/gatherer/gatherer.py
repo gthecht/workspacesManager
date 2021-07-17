@@ -1,4 +1,5 @@
 from time import sleep
+from os import path
 from datetime import datetime
 import pandas as pd
 import threading
@@ -17,7 +18,7 @@ class Gatherer(threading.Thread):
     self.reply_q = queue.Queue()
 
     self.running = False
-    self.log_file = self.log_dir + "log-" + datetime.now().strftime('%Y-%m-%dT%H-%M-%S') + ".csv"
+    self.apps_log_file = path.join(self.log_dir, "log-" + datetime.now().strftime('%Y-%m-%dT%H-%M-%S') + ".csv")
     self.SLEEP_TIME = 30 # time to sleep between data collection - note that gathering the apps takes about 2 seconds
     super().__init__(name="gatherer", daemon=True)
 
@@ -53,7 +54,7 @@ class Gatherer(threading.Thread):
       sleep(self.SLEEP_TIME)
       return self.run()
 
-    self.data.to_csv(self.log_file, index=False)
+    self.data.to_csv(self.apps_log_file, index=False)
     while self.running:
       sleep(self.SLEEP_TIME)
       # print("Gathering data")
@@ -77,7 +78,7 @@ class Gatherer(threading.Thread):
         continue
       else:
         self.compare_data(data)
-        self.data.to_csv(self.log_file, index=False)
+        self.data.to_csv(self.apps_log_file, index=False)
 
   def gather_files(self):
     # print("  open files...")

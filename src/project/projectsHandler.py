@@ -1,5 +1,6 @@
 import sys
 import os
+import json
 import threading
 import queue
 
@@ -8,9 +9,10 @@ sys.path.insert(1, parent)
 from project import Project
 
 class ProjectsHandler(threading.Thread):
-  def __init__(self, projects_paths, os="windows"):
+  def __init__(self, projects_paths, data_file, os="windows"):
     self.os = os
     self.projects_paths = projects_paths
+    self.data_file = data_file
     self.current = None
     self.projects = {}
     self.running = True
@@ -62,6 +64,11 @@ class ProjectsHandler(threading.Thread):
     return self.current
 
   def save(self):
+    data_dict = {
+      "projects": self.projects_paths
+    }
+    with open(self.data_file, 'w') as data_file:
+      json.dump(data_dict, data_file, sort_keys=True, indent=2)
     if self.current is None: return None
     self.projects[self.current].save()
 
@@ -87,6 +94,7 @@ class ProjectsHandler(threading.Thread):
     else:
       project = Project(paths, name, proj_type, author, start_time, dirs, files, apps)
       self.projects[project.name] = project
+      self.projects_paths.append(paths[0])
 
   def remove_sub_dir(self, path):
     "Removes sub directories, for instance when a sub directory is a project"
