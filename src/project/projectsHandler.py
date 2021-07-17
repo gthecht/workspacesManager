@@ -1,17 +1,31 @@
 import sys
 import os
+import threading
+import queue
 
 parent = os.path.abspath('./src')
 sys.path.insert(1, parent)
 from project import Project
 
-class ProjectsHandler:
+class ProjectsHandler(threading.Thread):
   def __init__(self, projects_paths, os="windows"):
     self.os = os
     self.projects_paths = projects_paths
     self.current = None
     self.projects = {}
+    self.running = True
     self.init_projects()
+    self.q = queue.Queue()
+    super().__init__(name="projectHandler", daemon=True)
+
+  def run(self):
+    while self.running:
+      job = self.q.get()
+      method = getattr(self, job["method"])
+      value = method(**job["args"])
+      # return the value if its supposed to be returned:
+      if "reply_q" in job.keys(): job["reply_q"].put(value)
+      self.q.task_done()
 
   def init_projects(self):
     for ind, path in enumerate(self.projects_paths):
@@ -82,6 +96,7 @@ class ProjectsHandler:
   def update(self, open_files, open_apps):
     if self.current is None: return None
     self.projects[self.current].update(open_files, open_apps)
+    self.save()
 
   # Get:
   def get_open(self):
@@ -117,6 +132,9 @@ class ProjectsHandler:
       return data
     except Exception as err:
       print(err)
+
+  def stop(self):
+    self.running = False
 
 if __name__ == '__main__':
   handler = ProjectsHandler([os.path.abspath('.'), os.path.abspath('.'), "C:/"])
