@@ -1,5 +1,26 @@
 
 BUGS:
+
+  project:
+    New files in the project folder currently aren't added to the project files. Add them each initialization?
+    What data about the project should I keep in the appData folder?
+
+  cli:
+    Make the cli more readable. This includes less instruction and surrounding info. More dealing with the data itself.
+    Show dataframes in a more readable manner - not all the columns have to appear.
+
+  Relevance:
+    Currently, the relevance parameter is just a function of open or closed. Change this to make it smarter.
+    This will need more research and some algorithmics.
+
+  Notes:
+    Add notes functionality
+
+  URLs:
+    Add URL functionality.
+
+PAST BUGS:
+
   appsGatherer.py:
     Make sure all the apps that are open, have an app from the apps df that fits them.
     Apps installed with the microsoft store aren't handled well. The are opened differently, not from the start exactly, and also it is harder to know if they are open.
