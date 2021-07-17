@@ -21,7 +21,7 @@ class FilesGatherer:
       "Directory",
       "FullName"
     ]
-    print("files handler constructed")
+    # print("files handler constructed")
 
   # Get the childitems of the given project
   def get_open_files(self, paths, start_time):

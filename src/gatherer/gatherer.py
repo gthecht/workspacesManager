@@ -56,7 +56,7 @@ class Gatherer(threading.Thread):
     self.data.to_csv(self.log_file, index=False)
     while self.running:
       sleep(self.SLEEP_TIME)
-      print("Gathering data")
+      # print("Gathering data")
       try:
         self.gather_files()
         self.gather_apps()
@@ -80,7 +80,7 @@ class Gatherer(threading.Thread):
         self.data.to_csv(self.log_file, index=False)
 
   def gather_files(self):
-    print("  open files...")
+    # print("  open files...")
     project_paths = self.projects_handler.get_proj_paths()
     proj_paths_job = {
       "method": "get_proj_paths",
@@ -98,7 +98,7 @@ class Gatherer(threading.Thread):
     self.open_files = self.files_handler.get_open_files(project_paths, project_time)
 
   def gather_apps(self):
-    print("  open apps...")
+    # print("  open apps...")
     self.open_apps = self.apps_handler.get_open_apps()
 
   def compare_data(self, data):

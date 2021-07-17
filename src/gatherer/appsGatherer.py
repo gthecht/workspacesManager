@@ -28,10 +28,10 @@ class AppsGatherer:
     if self.os == "windows": self.STARTPATH = "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\"
     self.explorer = Explorer()
     self.get_apps()
-    print("apps handler constructed")
+    # print("apps handler constructed")
 
   def get_apps(self):
-    print("Initializing apps with the start shortcuts")
+    # print("Initializing apps with the start shortcuts")
     start_apps = PSClient.get_PS_table("Get-StartApps", ["Name"])
     start_apps = [app[0] for app in start_apps]
     apps_table = PSClient.get_PS_table("Get-ChildItem \"" + self.STARTPATH + "*\" -Recurse | where { ! $_.PSIsContainer }", ["Name", "FullName"])
