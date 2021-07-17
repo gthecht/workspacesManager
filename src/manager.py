@@ -31,10 +31,12 @@ class Manager:
     else: raise TypeError("unknown system platform", sys.platform)
 
   def run(self):
-    self.gather()
-
-  def gather(self):
-    self.gatherer.gather()
+    self.projects_handler.start()
+    self.gatherer.start()
+    self.client.start()
+    self.projects_handler.join()
+    self.gatherer.join()
+    self.client.join()
 
   def save(self):
     self.executor.save()
@@ -52,7 +54,7 @@ if __name__ == '__main__':
   time.sleep(10)
   print("Gathering:")
   t1 = time.perf_counter()
-  manager.gather()
+  manager.run()
   print("Gathering took: ", time.perf_counter() - t1, "seconds")
   t2 = time.perf_counter()
   manager.save()
