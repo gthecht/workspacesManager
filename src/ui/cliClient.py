@@ -1,6 +1,7 @@
-from numpy.core.records import array
 import pandas as pd
-class CLIent:
+import threading
+
+class CLIent(threading.Thread):
   def __init__(self, executor, batch=5):
     self.executor = executor
     self.batch = batch
@@ -18,6 +19,7 @@ class CLIent:
       "create_project": "Create a new project",
       "stop": "stop"
     }
+    super().__init__(name="client")
 
   def run(self):
     while self.running:
@@ -188,8 +190,10 @@ if __name__ == '__main__':
 
   projects_handler = ProjectsHandler([os.path.abspath('.')], "windows")
   executor = Executor(projects_handler)
+  projects_handler.start()
   client = CLIent(executor)
-  client.run()
+  client.start()
+  client.join()
   # action = client.choose_action()
   # print(action)
   # project = client.open_project(["first", "second", "third", "fourth", "fifth", "six", "seven"])
