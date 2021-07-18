@@ -29,7 +29,8 @@ class Project:
       datetime.fromisoformat(data["start_time"]),
       data["dirs"],
       files,
-      data["apps"]
+      data["apps"],
+      data["removed_dirs"]
     )
     return project
 
@@ -43,6 +44,7 @@ class Project:
     dirs=None,
     files=None,
     apps=[],
+    removed_dirs=[],
     forget_rate=0.99,
     add_rate=1.1
   ):
@@ -70,6 +72,7 @@ class Project:
     if files is None: self.get_files()
     else: self.files = files
     self.apps = apps
+    self.removed_dirs = removed_dirs
     self.open_files = []
     self.open_apps = []
 
@@ -90,14 +93,19 @@ class Project:
       self.files, ["LastWriteTime", "LastAccessTime"]
     )
     # Add columns to files:
-    self.files["Relevance"] = 1
-    self.files["Open"] = False
-    self.files["Type"] = [ext.split(".")[-1] for ext in self.files["Extension"]]
-    self.files["Type"].mask(self.files["Directory"] == "", "dir", inplace=True)
+    self.files = self.file_add_columns(self.files)
+
+  def file_add_columns(self, files):
+    files["Relevance"] = 1
+    files["Open"] = False
+    files["Type"] = [ext.split(".")[-1] for ext in files["Extension"]]
+    files["Type"].mask(files["Directory"] == "", "dir", inplace=True)
     # The directory's directory will be itself:
-    self.files["Directory"].mask(self.files["Directory"] == "", \
-      self.files["FullName"], inplace=True)
-    self.files.set_index("FullName", inplace=True)
+    if "FullName" not in files.columns: files.reset_index(inplace=True)
+    files["Directory"].mask(files["Directory"] == "", \
+      files["FullName"], inplace=True)
+    files.set_index("FullName", inplace=True)
+    return files
 
   # get directories:
   def get_directories(self):
@@ -125,7 +133,8 @@ class Project:
       "author": self.author,
       "start_time": self.start_time.isoformat(),
       "dirs": self.dirs,
-      "apps": self.apps
+      "apps": self.apps,
+      "removed_dirs": self.removed_dirs
     }
     if not os.path.exists(self.rarian_path):
       try:
@@ -141,6 +150,7 @@ class Project:
   # remove some subdirectory and all its children from files
   def remove_sub_dir(self, sub_dir):
     sub_dir = os.path.abspath(sub_dir)
+    self.removed_dirs.append(sub_dir)
     self.dirs = list(filter(lambda dir: sub_dir not in dir, self.dirs))
     self.files = self.files[[sub_dir not in directory for directory in self.files["Directory"]]]
     # self.files.reset_index(drop=True, inplace=True)
@@ -169,6 +179,32 @@ class Project:
       self.files.at[fileName, "Relevance"] *= self.add_rate
       self.files.at[fileName, "Open"] = True
 
+    new_file_names = list(set(self.open_files.index) - set(common_files))
+    new_files = self.open_files.loc[new_file_names]
+    if len(new_files) == 0: return
+    for sub_dir in self.removed_dirs:
+      new_files = new_files[[sub_dir not in directory for directory in new_files["Directory"]]]
+    new_files = self.file_add_columns(new_files)
+    if new_files.empty: return
+    self.files = self.files.append(new_files)
+
+  def add_new_files(self, new_files):
+    child_items = []
+    for path in new_files:
+      cmd = "Get-ChildItem " + path + \
+            " -Recurse -ErrorAction silentlycontinue"
+      new_child_items = PSClient.get_PS_table(cmd, self.file_items)
+      for child_item in new_child_items:
+        child_items.append(child_item)
+    files = pd.DataFrame(child_items, columns=self.file_items)
+    # parse time fields:
+    files = PSClient.parse_time(
+      files, ["LastWriteTime", "LastAccessTime"]
+    )
+    # Add columns to files:
+    files = self.file_add_columns(files)
+    return files
+
   def apps_update(self):
     if self.open_apps.empty: pass
     pass
@@ -196,7 +232,7 @@ class Project:
 
 if __name__ == '__main__':
   project = Project([os.path.abspath('.')], "workspacesManager", "test", "giladH")
-  project.remove_sub_directory("C:/Users/GiladHecht/Workspace/workspacesManager/src")
+  project.remove_sub_dir("C:/Users/GiladHecht/Workspace/workspacesManager/src")
   project.save()
   load_project = Project.load(os.path.abspath('.'))
   print("files:", project.files.equals(load_project.files))
