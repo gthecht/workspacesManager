@@ -15,6 +15,7 @@ def pipe_PS_to_List(cmd):
 def get_PS_table(cmd, items):
   full_cmd = cmd + " | Format-Table " + ", ".join(items) + " -AutoSize | Out-String -Width 1024"
   rows_list = run_powershell(full_cmd).split("\\r\\n")[1:-2]
+
   if len(rows_list) == 0: return []
   places = [rows_list[0].lower().find(item.lower()) for item in items]
   if len(items) == 1: table_list = [[row] for row in rows_list]
@@ -24,6 +25,23 @@ def get_PS_table(cmd, items):
   table_list.sort(key=lambda row: " ".join(row)) # sort the table alphebatically
   table_list = reslash(table_list)
   return table_list
+
+def get_PS_table_from_list(cmd, items):
+  full_cmd = cmd + " | Format-List " + ", ".join(items) + " | Out-String -Width 1024"
+  cluster_list = run_powershell(full_cmd).split("\\r\\n\\r\\n")[1:-2]
+  table_list = []
+  for group in cluster_list:
+    row_list = []
+    for row in group.split("\\r\\n"):
+      pair = row.split(":")
+      pair = [cell.strip() for cell in pair]
+      if pair[0] in items: row_list.append(pair[1])
+    table_list.append(row_list)
+
+  table_list.sort(key=lambda row: " ".join(row)) # sort the table alphebatically
+  table_list = reslash(table_list)
+  return table_list
+
 
 def reslash(data_list, slash="\\"):
   for ind, element in enumerate(data_list):
