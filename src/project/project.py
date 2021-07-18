@@ -84,7 +84,7 @@ class Project:
     for path in self.paths:
       cmd = "Get-ChildItem " + path + \
             " -Recurse -ErrorAction silentlycontinue"
-      new_child_items = PSClient.get_PS_table(cmd, self.file_items)
+      new_child_items = PSClient.get_PS_table_from_list(cmd, self.file_items)
       for child_item in new_child_items:
         child_items.append(child_item)
     self.files = pd.DataFrame(child_items, columns=self.file_items)
@@ -113,7 +113,7 @@ class Project:
     for path in self.paths:
       cmd = "Get-ChildItem " + path + \
             " -Directory -Recurse -ErrorAction silentlycontinue"
-      new_child_items = PSClient.get_PS_table(cmd, ["FullName"])
+      new_child_items = PSClient.get_PS_table_from_list(cmd, ["FullName"])
       for child_item in new_child_items:
         if child_item not in self.paths:
           self.dirs.append(child_item[0])
@@ -193,7 +193,7 @@ class Project:
     for path in new_files:
       cmd = "Get-ChildItem " + path + \
             " -Recurse -ErrorAction silentlycontinue"
-      new_child_items = PSClient.get_PS_table(cmd, self.file_items)
+      new_child_items = PSClient.get_PS_table_from_list(cmd, self.file_items)
       for child_item in new_child_items:
         child_items.append(child_item)
     files = pd.DataFrame(child_items, columns=self.file_items)

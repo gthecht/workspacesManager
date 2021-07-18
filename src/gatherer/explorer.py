@@ -19,7 +19,7 @@ class Explorer:
             '$b = $a.windows() | select-object LocationURL, LocationName; ' + \
             '$b'
       items = ["LocationName", "LocationURL"]
-      open_dirs_list = PSClient.get_PS_table(cmd, items)
+      open_dirs_list = PSClient.get_PS_table_from_list(cmd, items)
       return open_dirs_list
     else: return unknown_OS_Warning()
 

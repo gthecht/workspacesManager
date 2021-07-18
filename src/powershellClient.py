@@ -33,7 +33,7 @@ def get_PS_table_from_list(cmd, items):
   for group in cluster_list:
     row_list = []
     for row in group.split("\\r\\n"):
-      pair = row.split(":")
+      pair = row.split(" : ")
       pair = [cell.strip() for cell in pair]
       if pair[0] in items: row_list.append(pair[1])
     table_list.append(row_list)

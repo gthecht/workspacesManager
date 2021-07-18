@@ -32,9 +32,9 @@ class AppsGatherer:
 
   def get_apps(self):
     # print("Initializing apps with the start shortcuts")
-    start_apps = PSClient.get_PS_table("Get-StartApps", ["Name"])
+    start_apps = PSClient.get_PS_table_from_list("Get-StartApps", ["Name"])
     start_apps = [app[0] for app in start_apps]
-    apps_table = PSClient.get_PS_table("Get-ChildItem \"" + self.STARTPATH + "*\" -Recurse | where { ! $_.PSIsContainer }", ["Name", "FullName"])
+    apps_table = PSClient.get_PS_table_from_list("Get-ChildItem \"" + self.STARTPATH + "*\" -Recurse | where { ! $_.PSIsContainer }", ["Name", "FullName"])
 
     apps_list = []
     candidates = []
@@ -56,7 +56,7 @@ class AppsGatherer:
     if self.os == "windows":
       items = ["Id", "Name", "Description", "MainWindowTitle", "StartTime", "Path"]
       try:
-        open_apps_list = PSClient.get_PS_table("Get-Process | Where-Object { $_.MainWindowHandle -ne 0}", items)
+        open_apps_list = PSClient.get_PS_table_from_list("Get-Process | Where-Object { $_.MainWindowHandle -ne 0}", items)
       except Exception as err:
         print("Powershell client failed to get open apps with error: " + str(err))
         raise err

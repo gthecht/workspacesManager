@@ -40,7 +40,7 @@ class FilesGatherer:
             " -Recurse -ErrorAction silentlycontinue " + \
             "| Where-Object { $_.LastAccessTime -gt \"" + \
             start_time + "\"}"
-      new_child_items = PSClient.get_PS_table(cmd, self.items)
+      new_child_items = PSClient.get_PS_table_from_list(cmd, self.items)
       for child_item in new_child_items:
         child_items.append(child_item)
     open_files = pd.DataFrame(child_items, columns=self.items)
