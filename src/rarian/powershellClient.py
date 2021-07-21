@@ -3,53 +3,34 @@ import dateutil.parser
 import os
 
 def run_powershell(cmd):
-  return str(Popen(["powershell", cmd], stdout=PIPE).communicate() [0])
-
-def pipe_PS_to_List(cmd):
-  out_str = run_powershell(cmd)
-  out = out_str.split("\\r\\n")
-  out = out[2:len(out) - 3]
-  out = [row.strip() for row in out]
-  return out
-
-def get_PS_table(cmd, items):
-  full_cmd = cmd + " | Format-Table " + ", ".join(items) + " -AutoSize | Out-String -Width 1024"
-  rows_list = run_powershell(full_cmd).split("\\r\\n")[1:-2]
-
-  if len(rows_list) == 0: return []
-  places = [rows_list[0].lower().find(item.lower()) for item in items]
-  if len(items) == 1: table_list = [[row] for row in rows_list]
-  else: table_list = [[row[:places[1]]] + [row[places[ind + 1]:places[ind + 2]] for ind in range(len(places) - 2)] + [row[places[-1]:]] for row in rows_list]
-  table_list = [[cell.strip() for cell in row] for row in table_list]
-  table_list = list(filter(lambda row: (row != items) and not (row[0].startswith("-")) and (row != [""] * len(items)), table_list))
-  table_list.sort(key=lambda row: " ".join(row)) # sort the table alphebatically
-  table_list = reslash(table_list)
-  return table_list
+  """Run a command in powershell and return string"""
+  out = Popen(["powershell", cmd], stdout=PIPE).communicate() [0]
+  return out.decode('windows-1252')
 
 def get_PS_table_from_list(cmd, items):
+  """Run a command in powershell and output with Format-List, and return pd.dataFrame"""
   full_cmd = cmd + " | Format-List " + ", ".join(items) + " | Out-String -Width 1024"
-  cluster_list = run_powershell(full_cmd).split("\\r\\n\\r\\n")[1:-2]
+  cluster_list = run_powershell(full_cmd).split("\r\n\r\n")[1:-2]
   table_list = []
   for group in cluster_list:
-    row_list = []
-    for row in group.split("\\r\\n"):
+    row_list = [""] * len(items)
+    for row in group.split("\r\n"):
       pair = row.split(" : ")
       pair = [cell.strip() for cell in pair]
-      if pair[0] in items: row_list.append(pair[1])
+      if pair[0] in items: row_list[items.index(pair[0])] = pair[1]
     table_list.append(row_list)
-
   table_list.sort(key=lambda row: " ".join(row)) # sort the table alphebatically
   table_list = reslash(table_list)
   return table_list
 
-
 def reslash(data_list, slash="\\"):
+  """Make sure path's slashes are correct"""
   for ind, element in enumerate(data_list):
     try:
       if type(element) == list:
         element = reslash(element, slash)
         data_list[ind] = element
-      elif "\\" in element:
+      elif slash in element:
         data_list[ind] = os.path.normpath(element)
     except TypeError:
       # value wasn't a string
@@ -57,6 +38,7 @@ def reslash(data_list, slash="\\"):
   return data_list
 
 def parse_time(df, items):
+  """Parse powershell times in pd.DataFrame to iso-format"""
   for item in items:
     try:
         df[item] = df[item].map(lambda timeStr: \
