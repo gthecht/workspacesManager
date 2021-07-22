@@ -1,0 +1,17 @@
+{
+  "apps": [],
+  "author": "pytest",
+  "dirs": [
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\test\\tmpProject",
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\test\\tmpProject\\.rarian"
+  ],
+  "name": "test project",
+  "paths": [
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\test\\tmpProject"
+  ],
+  "removed_dirs": [
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\test\\testProject\\.rarian"
+  ],
+  "start_time": "2021-07-22T18:21:07.218796",
+  "type": "test"
+}
