@@ -5,8 +5,8 @@ import pandas as pd
 import threading
 import queue
 
-from appsGatherer import AppsGatherer
-from filesGatherer import FilesGatherer
+from rarian.gatherer.appsGatherer import AppsGatherer
+from rarian.gatherer.filesGatherer import FilesGatherer
 
 class Gatherer(threading.Thread):
   def __init__(self, log_dir, projects_handler, os="windows"):

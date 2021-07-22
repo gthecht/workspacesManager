@@ -3,8 +3,8 @@ import sys
 import pandas as pd
 parent = os.path.abspath('./src')
 sys.path.insert(1, parent)
-import powershellClient as PSClient
-from unknownOSWarning import unknown_OS_Warning
+from rarian import powershellClient as PSClient
+from rarian.unknownOSWarning import unknown_OS_Warning
 
 class Explorer:
   def __init__(self) -> None:

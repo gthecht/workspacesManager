@@ -6,7 +6,7 @@ import queue
 
 parent = os.path.abspath('./src')
 sys.path.insert(1, parent)
-from project import Project
+from rarian.project.project import Project
 
 class ProjectsHandler(threading.Thread):
   def __init__(self, projects_paths, data_file, os="windows"):

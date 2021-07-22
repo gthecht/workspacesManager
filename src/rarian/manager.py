@@ -2,18 +2,12 @@ import sys
 import os
 import json
 
-from ui.cliClient import CLIent
 
-project = os.path.abspath('./src/project')
-sys.path.insert(1, project)
-executor = os.path.abspath('./src/executor')
-sys.path.insert(1, executor)
-from projectsHandler import ProjectsHandler
-from executor import Executor
-
-gatherer = os.path.abspath('./src/gatherer')
-sys.path.insert(1, gatherer)
-from gatherer import Gatherer
+src = os.path.abspath('./src')
+from rarian.ui.cliClient import CLIent
+from rarian.project.projectsHandler import ProjectsHandler
+from rarian.executor.executor import Executor
+from rarian.gatherer.gatherer import Gatherer
 
 class Manager:
   def __init__(self, data_dir):

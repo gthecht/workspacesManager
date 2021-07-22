@@ -7,7 +7,7 @@ import json
 
 parent = os.path.abspath('./src')
 sys.path.insert(1, parent)
-import powershellClient as PSClient
+from rarian import powershellClient as PSClient
 
 class Project:
 
