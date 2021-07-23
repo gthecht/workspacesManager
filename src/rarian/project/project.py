@@ -16,10 +16,10 @@ class Project:
     if not os.path.isdir(os.path.join(path, ".rarian")):
       raise FileNotFoundError("Path is not a rarian project")
     data_path = os.path.join(path, ".rarian", "data.json")
-    with open(data_path, 'r') as files_csv:
-      files_str = files_csv.read()
-    data = json.loads(files_str)
-    files = pd.read_csv(os.path.join(path, ".rarian", "files.csv"), index_col=0)
+    with open(data_path, 'r') as data_file:
+      data_str = data_file.read()
+    data = json.loads(data_str)
+    files = pd.read_csv(os.path.join(path, ".rarian", "files.csv"), index_col=0, dtype={"Relevance": np.float64})
     files.fillna('', inplace=True)
     project = Project(
       data["paths"],
@@ -48,10 +48,10 @@ class Project:
     forget_rate=0.99,
     add_rate=1.1
   ):
-    self.paths = paths
+    self.paths = [os.path.normpath(path) for path in paths]
     self.rarian_path = os.path.join(self.paths[0], ".rarian")
     self.name = name
-    if name == None: self.name = paths[0] # change later to just the directory
+    if name == None: self.name = paths[0].split("\\")[-1]
     self.author = author
     self.type = proj_type
     self.start_time = start_time
@@ -158,8 +158,6 @@ class Project:
   def update(self, open_files, open_apps):
     if not open_files.empty and open_files.index.name != "FullName":
       open_files.set_index("FullName", inplace=True)
-    # if "FullName" not in open_files.index.names:
-      # open_files.set_index("FullName", inplace=True)
     self.open_files = open_files
     self.open_apps = open_apps
     self.files_update()
@@ -167,43 +165,42 @@ class Project:
     self.forget()
 
   def files_update(self):
-    if self.open_files.empty: pass # close all files
+    self.files_update_open()
+    self.files_update_closed()
+
+  def files_update_open(self):
+    if self.open_files.empty: pass
     # find common files in open_files and self.files:
     common_files = list((set(self.files.index) & set(self.open_files.index)))
-    # update relevance
-    for fileName in common_files:
-      self.files.at[fileName, "LastWriteTime"] = \
-        self.open_files.at[fileName, "LastWriteTime"]
-      self.files.at[fileName, "LastAccessTime"] = \
-        self.open_files.at[fileName, "LastAccessTime"]
-      self.files.at[fileName, "Relevance"] *= self.add_rate
-      self.files.at[fileName, "Open"] = True
 
     new_file_names = list(set(self.open_files.index) - set(common_files))
     new_files = self.open_files.loc[new_file_names]
-    if len(new_files) == 0: return
-    for sub_dir in self.removed_dirs:
-      new_files = new_files[[sub_dir not in directory for directory in new_files["Directory"]]]
-    new_files = self.file_add_columns(new_files)
-    if new_files.empty: return
-    self.files = self.files.append(new_files)
+    if len(new_files) > 0:
+      for sub_dir in self.removed_dirs:
+        new_files = new_files[[sub_dir not in directory for directory in new_files["Directory"]]]
+      new_files = self.file_add_columns(new_files)
+      if not new_files.empty:
+        self.files = self.files.append(new_files)
+        new_file_names = list(new_files.index)
+      else:
+        new_file_names = []
+    common_files.extend(new_file_names)
+    # update relevance
+    for file_name in common_files:
+      self.files.at[file_name, "LastWriteTime"] = \
+        self.open_files.at[file_name, "LastWriteTime"]
+      self.files.at[file_name, "LastAccessTime"] = \
+        self.open_files.at[file_name, "LastAccessTime"]
+      self.files.at[file_name, "Relevance"] *= self.add_rate
+      self.files.at[file_name, "Open"] = True
 
-  def add_new_files(self, new_files):
-    child_items = []
-    for path in new_files:
-      cmd = "Get-ChildItem " + path + \
-            " -Recurse -ErrorAction silentlycontinue"
-      new_child_items = PSClient.get_PS_table_from_list(cmd, self.file_items)
-      for child_item in new_child_items:
-        child_items.append(child_item)
-    files = pd.DataFrame(child_items, columns=self.file_items)
-    # parse time fields:
-    files = PSClient.parse_time(
-      files, ["LastWriteTime", "LastAccessTime"]
-    )
-    # Add columns to files:
-    files = self.file_add_columns(files)
-    return files
+  def files_update_closed(self):
+    open_files = self.files[self.files["Open"] == True]
+    if open_files.empty: return
+    still_open = list((set(open_files.index) & set(self.open_files.index)))
+    closed = list(set(open_files.index) - set(still_open))
+    for closed_file in closed:
+      self.files.at[closed_file, "Open"] = False
 
   def apps_update(self):
     if self.open_apps.empty: pass
@@ -228,24 +225,3 @@ class Project:
     # We may want to save the previous information somewhere, but that's not
     # important
     self.start_time = datetime.now()
-
-
-if __name__ == '__main__':
-  project = Project([os.path.abspath('.')], "workspacesManager", "test", "giladH")
-  project.remove_sub_dir("C:/Users/GiladHecht/Workspace/workspacesManager/src")
-  project.save()
-  load_project = Project.load(os.path.abspath('.'))
-  print("files:", project.files.equals(load_project.files))
-  print("paths:", project.paths == load_project.paths)
-  print("name:", project.name == load_project.name)
-  print("type:", project.type == load_project.type)
-  print("author:", project.author == load_project.author)
-  print("start_time:", project.start_time == load_project.start_time)
-  print("dirs:", project.dirs == load_project.dirs)
-  print("apps:", project.apps == load_project.apps)
-
-  try:
-    load_project = Project.load("C:/Users/GiladHecht")
-  except FileNotFoundError as err:
-    print("Test succeeded:", err)
-  print("tests complete")

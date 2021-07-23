@@ -1,1 +1,5 @@
 FullName,Name,LastWriteTime,LastAccessTime,Extension,Directory,Relevance,Open,Type
+C:\Users\GiladHecht\Workspace\workspacesManager\test\tmpProject\.rarian,.rarian,2021-07-22T19:01:19,2021-07-23T14:32:17,.rarian,C:\Users\GiladHecht\Workspace\workspacesManager\test\tmpProject\.rarian,1.0,False,rarian
+C:\Users\GiladHecht\Workspace\workspacesManager\test\tmpProject\.rarian\data.json,data.json,2021-07-23T14:45:22,2021-07-23T14:45:22,.json,C:\Users\GiladHecht\Workspace\workspacesManager\test\tmpProject\.rarian,1.0,False,json
+C:\Users\GiladHecht\Workspace\workspacesManager\test\tmpProject\.rarian\files.csv,files.csv,2021-07-23T14:45:22,2021-07-23T14:45:22,.csv,C:\Users\GiladHecht\Workspace\workspacesManager\test\tmpProject\.rarian,1.0,False,csv
+C:\Users\GiladHecht\Workspace\workspacesManager\test\tmpProject\testFile.py,testFile.py,2021-07-22T19:17:45,2021-07-22T19:17:45,.py,C:\Users\GiladHecht\Workspace\workspacesManager\test\tmpProject,1.0,False,py
