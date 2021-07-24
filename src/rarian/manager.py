@@ -16,7 +16,7 @@ class Manager:
     self.log_dir = os.path.join(data_dir, "logs")
     self.load_data()
 
-    self.projects_handler = ProjectsHandler(self.projects, self.data_file, self.os)
+    self.projects_handler = ProjectsHandler(self.data_file, self.os)
     self.gatherer = Gatherer(self.log_dir,self.projects_handler, self.os)
     self.executor = Executor(self.projects_handler, self.os)
     self.client = CLIent(self.executor)
