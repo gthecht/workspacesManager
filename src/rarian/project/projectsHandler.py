@@ -9,14 +9,13 @@ sys.path.insert(1, parent)
 from rarian.project.project import Project
 
 class ProjectsHandler(threading.Thread):
-  def __init__(self, projects_paths, data_file, os="windows"):
+  def __init__(self, data_path, os="windows"):
     self.os = os
-    self.projects_paths = projects_paths
-    self.data_file = data_file
-    self.current = None
+    self.data_path = data_path
+    self.load_data()
     self.projects = {}
-    self.running = True
     self.init_projects()
+    self.running = True
     self.q = queue.Queue()
     super().__init__(name="projectHandler", daemon=True)
 
@@ -29,12 +28,21 @@ class ProjectsHandler(threading.Thread):
       if "reply_q" in job.keys(): job["reply_q"].put(value)
       self.q.task_done()
 
+  def load_data(self):
+    with open(self.data_path, 'r') as data_file:
+      data_str = data_file.read()
+    data = json.loads(data_str)
+    self.projects_paths = data["projects"]
+    if "current" in data: self.current = data["current"]
+    else: self.current = None
+    self.default_author = data["default author"]
+
   def init_projects(self):
     for ind, path in enumerate(self.projects_paths):
       try:
         path = os.path.normpath(path)
         project = Project.load(path)
-      except FileNotFoundError as err:
+      except FileNotFoundError:
         print("Error: path '" + path + "' is not  a rarian project")
         del self.projects_paths[ind]
         continue
@@ -54,6 +62,7 @@ class ProjectsHandler(threading.Thread):
     if name not in self.projects.keys():
       raise ValueError("Project doesn't exist")
     # Turn previous project off:
+    if name == self.current: return
     if self.current: self.projects[self.current].turn_off()
     self.current = name
     # Turn new project on:
@@ -65,16 +74,19 @@ class ProjectsHandler(threading.Thread):
 
   def save(self):
     data_dict = {
-      "projects": self.projects_paths
+      "projects": self.projects_paths,
+      "current": self.current,
+      "default author": self.default_author,
     }
-    with open(self.data_file, 'w') as data_file:
-      json.dump(data_dict, data_file, sort_keys=True, indent=2)
+    with open(self.data_path, 'w') as data_path:
+      json.dump(data_dict, data_path, sort_keys=True, indent=2)
     if self.current is None: return None
     self.projects[self.current].save()
 
   def close_project(self):
-    self.projects[self.current].turn_off()
-    self.current = None
+    if self.current:
+      self.projects[self.current].turn_off()
+      self.current = None
 
   # Insert:
   def new_project(
@@ -88,17 +100,22 @@ class ProjectsHandler(threading.Thread):
     files=None,
     apps=[]
   ):
-    "Create new project"
+    """Create new project"""
     if name in self.projects.keys():
-      print("project of name {} already exists", name)
+      raise ValueError(f"project of name {name} already exists")
     else:
       project = Project(paths, name, proj_type, author, start_time, dirs, files, apps)
       self.projects[project.name] = project
       self.projects_paths.append(paths[0])
 
   def remove_sub_dir(self, path):
-    "Removes sub directories, for instance when a sub directory is a project"
-    self.projects[self.current].remove_sub_dir(path)
+    """Removes sub directories, for instance when a sub directory is a project"""
+    if self.current: self.projects[self.current].remove_sub_dir(path)
+    else: print("Assign project before you remove a directory")
+
+  def add_sub_dir(self, path):
+    """Adds a sub directory - that possibly was removed"""
+    raise NotImplementedError
 
   # Gather:
   def update(self, open_files, open_apps):
@@ -108,12 +125,9 @@ class ProjectsHandler(threading.Thread):
 
   # Get:
   def get_open(self):
-    "Get the open project, files, apps and more"
+    """Get the open project, files, apps and more"""
     if self.current is None: return None
     return self.projects[self.current].get_open()
-
-  def get_current(self):
-    return self.current
 
   def get_proj_paths(self):
     if self.current is None: return None
@@ -123,36 +137,17 @@ class ProjectsHandler(threading.Thread):
     if self.current is None: return None
     return self.projects[self.current].start_time
 
-  def get_all_projects(self):
-    return list(self.projects.keys())
-
   def get_project_data(self, member, sort_by="Relevance"):
-    try:
-      if member == "projects": return self.get_all_projects()
-      if self.current is None: return None
-      if member == "files":
-        data = self.projects[self.current].files
-        data.sort_values(by=sort_by, ascending=False, inplace=False)
-      elif member == "apps": data = self.projects[self.current].apps
-      elif member == "notes": data = self.projects[self.current].notes
-      elif member == "urls": data = self.projects[self.current].urls
-      else: raise KeyError("undefined data member")
-      return data
-    except Exception as err:
-      print(err)
+    if member == "projects": return list(self.projects.keys())
+    if self.current is None: return None
+    if member == "files":
+      data = self.projects[self.current].files
+      data.sort_values(by=sort_by, ascending=False, inplace=False)
+    elif member == "apps": data = self.projects[self.current].apps
+    elif member == "notes": data = self.projects[self.current].notes
+    elif member == "urls": data = self.projects[self.current].urls
+    else: raise ValueError("undefined data member")
+    return data
 
   def stop(self):
     self.running = False
-
-if __name__ == '__main__':
-  data_file = os.path.join(os.path.abspath('.'), "appData", "data.json")
-  handler = ProjectsHandler([os.path.abspath('.'), os.path.abspath('.'), "C:/"], data_file)
-  handler.set_current(name="workspacesManager")
-  print("current project:", handler.get_current())
-  print("projects:", handler.get_all_projects())
-  try:
-    handler.set_current(name="rest")
-  except BaseException as err:
-    print("undefined project passed to set_current")
-
-  handler.set_current(path=os.path.abspath('.'))

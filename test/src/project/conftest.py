@@ -1,9 +1,10 @@
 import os
 import shutil
+import json
 import pytest
 import pandas as pd
 from rarian.project.project import Project
-import rarian.powershellClient as PSClient
+from rarian.project.projectsHandler import ProjectsHandler
 
 # constants:
 file_items = [
@@ -17,6 +18,7 @@ file_items = [
 test_proj = os.path.abspath("./test/testProject")
 tmp_proj = os.path.abspath("./test/tmpProject")
 empty_proj = os.path.abspath("./test/emptyProject")
+proj_name = "test project"
 project_dict = {
   "paths": [empty_proj],
   "name": "TestProj",
@@ -38,6 +40,10 @@ def empty_proj_path():
 @pytest.fixture
 def project_details():
   return project_dict
+
+@pytest.fixture
+def project_name():
+  return proj_name
 
 @pytest.fixture
 def create_uninitialized_project():
@@ -72,3 +78,26 @@ def add_new_file():
       file.write("temporary file")
     return new_file_path
   return _add_new_file
+
+
+#%% ProjectsHandler
+app_data_dict = {
+  "projects": [tmp_proj],
+  "default author": "pytest",
+  "current": None,
+}
+
+app_data_path = os.path.abspath("./test/appData//data.json")
+
+@pytest.fixture
+def project_handler_file():
+  return app_data_path
+
+@pytest.fixture
+def create_project_handler():
+  shutil.copytree(test_proj, tmp_proj)
+  proj_handler = ProjectsHandler(app_data_path)
+  yield proj_handler
+  shutil.rmtree(tmp_proj)
+  with open(app_data_path, 'w') as data_file:
+      json.dump(app_data_dict, data_file, sort_keys=True, indent=2)
