@@ -11,6 +11,8 @@ from rarian.unknownOSWarning import unknown_OS_Warning
 from rarian.gatherer.explorer import Explorer
 
 def find_words_in_string(wordStr, string):
+  """Find the number of words in wordStr that appear in string, normalized by the number of words"""
+  if not wordStr or not string: return 0
   words = wordStr.split()
   appear = list(filter(lambda word: word.lower() in string.lower(), words))
   return len(appear) / len(words)
@@ -125,9 +127,3 @@ class AppsGatherer:
     open_apps = open_apps.append(open_folders)
     open_apps.reset_index(drop=True, inplace=True)
     return open_apps
-
-if __name__ == '__main__':
-  apps_handler = AppsGatherer()
-  open_apps = apps_handler.get_open_apps()
-  print("open apps:")
-  print(open_apps)
