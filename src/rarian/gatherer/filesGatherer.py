@@ -23,17 +23,17 @@ class FilesGatherer:
     ]
     # print("files handler constructed")
 
-  # Get the childitems of the given project
   def get_open_files(self, paths, start_time):
+    """Get the childitems of the given project"""
     if paths is None: return pd.DataFrame()
-    if type(start_time) == datetime:
-      start_time = start_time.isoformat()
     if self.os == "windows":
       open_files = self.get_files_from_powershell(paths, start_time)
       return open_files
     else: return unknown_OS_Warning()
 
   def get_files_from_powershell(self, paths, start_time):
+    if type(start_time) == datetime:
+      start_time = start_time.isoformat()
     child_items = []
     for path in paths:
       cmd = "Get-ChildItem " + path + \
@@ -49,10 +49,3 @@ class FilesGatherer:
       open_files, ["LastWriteTime", "LastAccessTime"]
     )
     return open_files
-
-if __name__ == '__main__':
-  now = datetime.now().isoformat()[:10]
-  files_handler = FilesGatherer()
-  open_files = files_handler.get_open_files([os.path.abspath('.')], now)
-  print("open files:")
-  print(open_files)
