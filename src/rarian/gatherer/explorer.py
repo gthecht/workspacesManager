@@ -7,10 +7,8 @@ from rarian import powershellClient as PSClient
 from rarian.unknownOSWarning import unknown_OS_Warning
 
 class Explorer:
-  def __init__(self) -> None:
-    if "win" in sys.platform: self.os = "windows"
-    elif "linux" in sys.platform: self.os = "linux"
-    else: raise TypeError("unknown system platform", sys.platform)
+  def __init__(self, os="windows") -> None:
+    self.os = os
     if self.os == "windows": self.STARTPATH = "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\"
 
   def get_open_directories(self):
@@ -23,14 +21,14 @@ class Explorer:
       return open_dirs_list
     else: return unknown_OS_Warning()
 
-  def get_open_explorers(self, explorerRow):
-      openDirs = pd.DataFrame([], columns=list(explorerRow.columns))
+  def get_open_explorers(self, explorer_row):
+      open_dirs = pd.DataFrame([], columns=list(explorer_row.columns))
       open_dirs_list = self.get_open_directories()
-      if len(open_dirs_list) == 0: return openDirs
+      if len(open_dirs_list) == 0: return open_dirs
       for dir in open_dirs_list:
-        row = explorerRow.copy()
-        row["Name"] = dir[0]
-        row["MainWindowTitle"] = dir[0]
-        row["Path"] = dir[1]
-        openDirs = openDirs.append(row, ignore_index=True)
-      return openDirs
+        row = explorer_row.copy()
+        row.Name = dir[0]
+        row.MainWindowTitle = dir[0]
+        row.Path = dir[1][8:]
+        open_dirs = open_dirs.append(row, ignore_index=True)
+      return open_dirs

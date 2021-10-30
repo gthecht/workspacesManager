@@ -1,5 +1,6 @@
 import sys
 import pytest
+import pandas as pd
 from datetime import datetime
 from rarian.gatherer.appsGatherer import *
 from rarian.gatherer.filesGatherer import FilesGatherer
@@ -35,3 +36,35 @@ def get_apps_gatherer():
 def get_files_gatherer():
   return FilesGatherer(OS)
 
+# Explorer gatherer
+@pytest.fixture
+def get_items():
+  return ["LocationName", "LocationURL"]
+
+@pytest.fixture
+def get_open_dirs_cmd():
+  return '$a = New-Object -com "Shell.Application"; ' + \
+    '$b = $a.windows() | select-object LocationURL, LocationName; ' + \
+    '$b'
+
+@pytest.fixture
+def get_explorer():
+  return Explorer(OS)
+
+@pytest.fixture
+def start_explorer():
+  import os
+  import subprocess
+  from time import sleep
+  path = "C:/Users"
+  os.startfile(os.path.realpath(path))
+  sleep(1)
+  return path
+
+@pytest.fixture
+def get_explorer_row():
+  return pd.DataFrame({
+    "Name": [""],
+    "MainWindowTitle": [""],
+    "Path": ["C:/Users/"],
+    })
