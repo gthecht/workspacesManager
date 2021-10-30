@@ -3,32 +3,33 @@
   "author": "giladH",
   "dirs": [
     "C:\\Users\\GiladHecht\\Workspace\\workspacesManager",
-    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\.ipynb_checkpoints",
-    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\.rarian",
-    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\.vscode",
-    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\.vscode\\.ropeproject",
     "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\jupyter",
-    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\jupyter\\.ipynb_checkpoints",
     "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\logs",
     "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\powershellScripts",
     "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src",
-    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\__pycache__",
     "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\cpp",
     "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\executor",
     "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\gatherer",
-    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\gatherer\\__pycache__",
     "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\project",
-    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\project\\__pycache__",
-    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\ui",
-    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\ui\\__pycache__"
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\ui"
   ],
   "name": "workspacesManager",
   "paths": [
     "C:\\Users\\GiladHecht\\Workspace\\workspacesManager"
   ],
   "removed_dirs": [
-    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\.rarian"
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\.rarian",
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\.ipynb_checkpoints",
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\.rarian",
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\.vscode",
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\.vscode\\.ropeproject",
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\jupyter\\.ipynb_checkpoints",
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\__pycache__",
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\gatherer\\__pycache__",
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\project\\__pycache__",
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\ui\\__pycache__"
+
   ],
-  "start_time": "2021-07-19T22:21:07.218796",
+  "start_time": "2021-10-31T00:29:00.218796",
   "type": "test"
 }
