@@ -1,6 +1,7 @@
 import sys
 import os
 import json
+from time import sleep
 
 
 src = os.path.abspath('./src')
@@ -42,9 +43,12 @@ class Manager:
     self.projects_handler.join()
     self.gatherer.join()
     self.client.join()
+    self.save()
 
   def save(self):
-    self.executor.save()
+    while True:
+      sleep(30)
+      self.executor.save()
 
   def get_apps(self):
     return self.executor.open()["apps"]
