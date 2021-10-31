@@ -37,7 +37,6 @@ class Gatherer(threading.Thread):
     try:
       self.gather_files()
       self.gather_apps()
-      # self.projects_handler.update(self.open_files, self.open_apps)
       job = {
         "method": "update",
         "args": {
@@ -57,11 +56,9 @@ class Gatherer(threading.Thread):
     self.data.to_csv(self.apps_log_file, index=False)
     while self.running:
       sleep(self.SLEEP_TIME)
-      # print("Gathering data")
       try:
         self.gather_files()
         self.gather_apps()
-        # self.projects_handler.update(self.open_files, self.open_apps)
         job = {
           "method": "update",
           "args": {
@@ -81,7 +78,6 @@ class Gatherer(threading.Thread):
         self.data.to_csv(self.apps_log_file, index=False)
 
   def gather_files(self):
-    # print("  open files...")
     project_paths = self.projects_handler.get_proj_paths()
     proj_paths_job = {
       "method": "get_proj_paths",
@@ -99,7 +95,6 @@ class Gatherer(threading.Thread):
     self.open_files = self.files_handler.get_open_files(project_paths, project_time)
 
   def gather_apps(self):
-    # print("  open apps...")
     self.open_apps = self.apps_handler.get_open_apps()
 
   def compare_data(self, data):
@@ -120,16 +115,3 @@ class Gatherer(threading.Thread):
 
   def stop(self):
     self.running = False
-
-if __name__ == '__main__':
-  import os
-  import sys
-  project = os.path.abspath('./src/project')
-  sys.path.insert(1, project)
-  from projectsHandler import ProjectsHandler
-
-  projects_handler = ProjectsHandler([os.path.abspath('.')], "windows")
-  gatherer = Gatherer("C:/Users/GiladHecht/Workspace/workspacesManager/logs/", projects_handler)
-  projects_handler.start()
-  gatherer.start()
-  gatherer.join()
