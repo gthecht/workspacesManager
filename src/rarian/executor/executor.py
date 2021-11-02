@@ -2,8 +2,10 @@ import pandas as pd
 import queue
 
 class Executor:
-  def __init__(self, projects_handler, os="windows") -> None:
+  def __init__(self, projects_handler, quit, os="windows") -> None:
     self.projects_handler = projects_handler
+    self.quit = quit
+    self.running = True
     self.os = os
     self.data = {
       "files": None,
@@ -21,6 +23,7 @@ class Executor:
     else:
       reply = None
       while self.reply_q.empty():
+        if not self.running: return False
         continue
       reply = self.reply_q.get()
       return reply
@@ -174,6 +177,9 @@ class Executor:
       n0 = n1 - abs(n)
       n1 = max
     return self.data[member][n0:n1]
+
+  def stop(self):
+    self.running = False
 
 if __name__ == '__main__':
   import os

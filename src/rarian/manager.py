@@ -18,7 +18,7 @@ class Manager:
 
     self.projects_handler = ProjectsHandler(self.data_file, self.os)
     self.gatherer = Gatherer(self.log_dir,self.projects_handler, self.os)
-    self.executor = Executor(self.projects_handler, self.os)
+    self.executor = Executor(self.projects_handler, self.quit, self.os)
     self.client = CLIent(self.executor)
 
   # Get operating system:
@@ -48,6 +48,11 @@ class Manager:
 
   def get_apps(self):
     return self.executor.open()["apps"]
+
+  def quit(self):
+    self.gatherer.stop()
+    self.client.stop()
+    self.executor.stop()
 
 if __name__ == '__main__':
   import time

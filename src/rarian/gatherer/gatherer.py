@@ -19,7 +19,7 @@ class Gatherer(threading.Thread):
 
     self.running = False
     self.apps_log_file = path.join(self.log_dir, "log-" + datetime.now().strftime('%Y-%m-%dT%H-%M-%S') + ".csv")
-    self.SLEEP_TIME = 30 # time to sleep between data collection - note that gathering the apps takes about 2 seconds
+    self.SLEEP_TIME = 10 # time to sleep between data collection - note that gathering the apps takes about 2 seconds
     super().__init__(name="gatherer", daemon=True)
 
   def add_job(self, job):
@@ -28,6 +28,7 @@ class Gatherer(threading.Thread):
     else:
       reply = None
       while self.reply_q.empty():
+        if not self.running: return False
         continue
       reply = self.reply_q.get()
       return reply
@@ -56,6 +57,7 @@ class Gatherer(threading.Thread):
     self.data.to_csv(self.apps_log_file, index=False)
     while self.running:
       sleep(self.SLEEP_TIME)
+      if not self.running: break
       try:
         self.gather_files()
         self.gather_apps()
@@ -115,3 +117,8 @@ class Gatherer(threading.Thread):
 
   def stop(self):
     self.running = False
+    job = {
+      "method": "stop",
+      "args": {},
+    }
+    self.add_job(job)

@@ -33,8 +33,7 @@ class ProjectsHandler(threading.Thread):
       data_str = data_file.read()
     data = json.loads(data_str)
     self.projects_paths = data["projects"]
-    if "current" in data: self.current = data["current"]
-    else: self.current = None
+    self.current = None
     self.default_author = data["default author"]
 
   def init_projects(self):
@@ -150,4 +149,5 @@ class ProjectsHandler(threading.Thread):
     return data
 
   def stop(self):
+    self.save()
     self.running = False

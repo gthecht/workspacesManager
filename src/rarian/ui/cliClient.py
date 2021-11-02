@@ -34,6 +34,9 @@ class CLIent(threading.Thread):
 
   def quit(self):
     print("Byebye")
+    self.executor.quit()
+
+  def stop(self):
     self.running = False
 
   def choose_action(self):
