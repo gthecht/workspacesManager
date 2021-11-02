@@ -1,35 +1,68 @@
 {
-  "apps": [],
-  "author": "giladH",
+  "apps": null,
+<<<<<<< Updated upstream
+  "author": "GiladH",
+=======
+  "author": "giladh",
+>>>>>>> Stashed changes
   "dirs": [
     "C:\\Users\\GiladHecht\\Workspace\\workspacesManager",
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\appData",
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\appData\\logs",
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\htmlcov",
     "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\jupyter",
     "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\logs",
     "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\powershellScripts",
     "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src",
-    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\cpp",
-    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\executor",
-    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\gatherer",
-    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\project",
-    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\ui"
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\rarian",
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\rarian.egg-info",
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\rarian\\executor",
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\rarian\\gatherer",
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\rarian\\project",
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\rarian\\ui",
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\test",
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\test\\appData",
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\test\\src",
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\test\\src\\executor",
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\test\\src\\gatherer",
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\test\\src\\project",
+<<<<<<< Updated upstream
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\test\\testProject"
+=======
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\test\\testProject",
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\test\\emptyProject",
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\test\\tmpProject"
+>>>>>>> Stashed changes
   ],
   "name": "workspacesManager",
   "paths": [
     "C:\\Users\\GiladHecht\\Workspace\\workspacesManager"
   ],
   "removed_dirs": [
-    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\.rarian",
     "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\.ipynb_checkpoints",
-    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\.rarian",
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\.pytest_cache",
     "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\.vscode",
     "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\.vscode\\.ropeproject",
     "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\jupyter\\.ipynb_checkpoints",
-    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\__pycache__",
-    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\gatherer\\__pycache__",
-    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\project\\__pycache__",
-    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\ui\\__pycache__"
-
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\rarian\\__pycache__",
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\rarian\\executor\\__pycache__",
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\rarian\\gatherer\\__pycache__",
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\rarian\\project\\__pycache__",
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\src\\rarian\\ui\\__pycache__",
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\test\\src\\__pycache__",
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\test\\src\\executor\\__pycache__",
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\test\\src\\gatherer\\__pycache__",
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\test\\src\\project\\__pycache__",
+<<<<<<< Updated upstream
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\test\\testProject\\.rarian"
   ],
-  "start_time": "2021-10-31T00:29:00.218796",
-  "type": "test"
+  "start_time": "2021-11-06T20:32:38.194083",
+=======
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\test\\testProject\\.rarian",
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\.rarian",
+    "C:\\Users\\GiladHecht\\Workspace\\workspacesManager\\test\\tmpProject\\.rarian"
+  ],
+  "start_time": "2021-11-13T23:17:14.559300",
+>>>>>>> Stashed changes
+  "type": "code"
 }
