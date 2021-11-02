@@ -177,6 +177,7 @@ class Project:
     new_files = self.open_files.loc[new_file_names]
     if len(new_files) > 0:
       for sub_dir in self.removed_dirs:
+        if new_files.empty: break
         new_files = new_files[[sub_dir not in directory for directory in new_files["Directory"]]]
       new_files = self.file_add_columns(new_files)
       if not new_files.empty:
