@@ -80,9 +80,9 @@ class Gatherer(threading.Thread):
         self.data.to_csv(self.apps_log_file, index=False)
 
   def gather_files(self):
-    project_paths = self.projects_handler.get_proj_paths()
+    project_paths = self.projects_handler.get_proj_dirs()
     proj_paths_job = {
-      "method": "get_proj_paths",
+      "method": "get_proj_dirs",
       "args": {},
       "reply_q": self.reply_q
     }

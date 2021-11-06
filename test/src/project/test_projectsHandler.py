@@ -20,7 +20,7 @@ class TestProjectsHandler:
 
     proj_handler.load_data()
     assert proj_handler.projects_paths == ["projects"]
-    assert proj_handler.current == "current"
+    assert proj_handler.current == None
     assert proj_handler.default_author == "defaultAuthor"
 
   def test_init_projects_for_non_project(
@@ -302,23 +302,23 @@ class TestProjectsHandler:
     proj_handler.get_open()
     assert mock.call_count == 0
 
-  def test_get_proj_paths_for_current(
+  def test_get_proj_dirs_for_current(
     self,
     create_project_handler,
   ):
     """Should return project paths for current project"""
     proj_handler = create_project_handler
     proj_handler.current = list(proj_handler.projects.keys())[0]
-    paths = proj_handler.get_proj_paths()
+    paths = proj_handler.get_proj_dirs()
     assert paths == proj_handler.projects[proj_handler.current].paths
 
-  def test_get_proj_paths_for_no_current(
+  def test_get_proj_dirs_for_no_current(
     self,
     create_project_handler,
   ):
     """Shouldn't return project paths if there is no current project"""
     proj_handler = create_project_handler
-    paths = proj_handler.get_proj_paths()
+    paths = proj_handler.get_proj_dirs()
     assert paths == None
 
   def test_get_proj_start_time_for_current(

@@ -67,12 +67,13 @@ class Project:
       "Directory",
       "FullName"
     ]
-    self.removed_dirs = removed_dirs
-    if dirs is None: self.get_directories()
-    else: self.dirs = dirs
     if files is None: self.get_files()
     else: self.files = files
     self.apps = apps
+    self.removed_dirs = removed_dirs
+    if dirs is None: self.dirs = self.paths.copy()
+    else: self.dirs = dirs
+    self.update_directories()
     self.open_files = []
     self.open_apps = []
 
@@ -108,21 +109,21 @@ class Project:
     return files
 
   # get directories:
-  def get_directories(self):
-    self.dirs = self.paths.copy()
+  def update_directories(self):
     for path in self.paths:
       cmd = "Get-ChildItem " + path + \
             " -Directory -Recurse -ErrorAction silentlycontinue"
       new_child_items = PSClient.get_PS_table_from_list(cmd, ["FullName"])
       for child_item in new_child_items:
-        if child_item not in self.paths:
-          if "\\." in child_item[0]:
-            if "\\" in child_item[0].split("\\.")[1]: continue
-            self.removed_dirs.append(child_item[0])
-          elif "\\__" in child_item[0]:
-            if "\\" in child_item[0].split("\\__")[1]: continue
-            self.removed_dirs.append(child_item[0])
-          else: self.dirs.append(child_item[0])
+        child_item = child_item[0]
+        if (child_item not in self.dirs) and (child_item not in self.removed_dirs):
+          if "\\." in child_item:
+            if "\\" in child_item.split("\\.")[1]: continue
+            self.remove_sub_dir(child_item)
+          elif "\\__" in child_item:
+            if "\\" in child_item.split("\\__")[1]: continue
+            self.remove_sub_dir(child_item)
+          else: self.dirs.append(child_item)
 
   def get_open(self):
     open_data = {
@@ -168,7 +169,12 @@ class Project:
     self.open_apps = open_apps
     self.files_update()
     self.apps_update()
+    self.update_directories()
     self.forget()
+
+  def dirs_update(self, dirs):
+    self.dirs = dirs["dirs"]
+    self.removed_dirs = dirs["removed_dirs"]
 
   def files_update(self):
     self.files_update_open()
