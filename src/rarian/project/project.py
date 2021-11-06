@@ -67,12 +67,12 @@ class Project:
       "Directory",
       "FullName"
     ]
+    self.removed_dirs = removed_dirs
     if dirs is None: self.get_directories()
     else: self.dirs = dirs
     if files is None: self.get_files()
     else: self.files = files
     self.apps = apps
-    self.removed_dirs = removed_dirs
     self.open_files = []
     self.open_apps = []
 
@@ -116,7 +116,13 @@ class Project:
       new_child_items = PSClient.get_PS_table_from_list(cmd, ["FullName"])
       for child_item in new_child_items:
         if child_item not in self.paths:
-          self.dirs.append(child_item[0])
+          if "\\." in child_item[0]:
+            if "\\" in child_item[0].split("\\.")[1]: continue
+            self.removed_dirs.append(child_item[0])
+          elif "\\__" in child_item[0]:
+            if "\\" in child_item[0].split("\\__")[1]: continue
+            self.removed_dirs.append(child_item[0])
+          else: self.dirs.append(child_item[0])
 
   def get_open(self):
     open_data = {
