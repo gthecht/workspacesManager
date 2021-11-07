@@ -104,7 +104,7 @@ class Gatherer(threading.Thread):
     concat_df = pd.concat([data, self.data], ignore_index=True)
     duplicated = concat_df.duplicated(keep='first')
     ended = [not dup for dup in duplicated[len(data):]] # these are the old apps that have ended
-    now = datetime.now().isoformat()[:-7]
+    now = datetime.now().isoformat()
     for ind in [i for i, e in enumerate(ended) if e]:
       if concat_df.loc[ind + len(data.index)]["EndTime"] == "":
         concat_df.loc[ind + len(data.index)]["EndTime"] = now

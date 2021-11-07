@@ -86,6 +86,7 @@ class AppsGatherer:
         raise err
       open_apps.update(start_time)
       open_apps.insert(len(items), "EndTime", [""] * open_apps.shape[0])
+      open_apps = PSClient.parse_time(open_apps, ["StartTime"])
       return open_apps
     else: return unknown_OS_Warning()
 
