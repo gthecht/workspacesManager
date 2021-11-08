@@ -60,11 +60,6 @@ class TestGatherer:
   #   gatherer = get_gatherer
   #   assert True
 
-  # def test_compare_data(self, get_gatherer):
-  #   """should compare_data"""
-  #   gatherer = get_gatherer
-  #   assert True
-
   # def test_stop(self, get_gatherer):
   #   """should stop"""
   #   gatherer = get_gatherer

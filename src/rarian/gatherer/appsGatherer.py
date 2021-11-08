@@ -1,5 +1,6 @@
 import os
 import sys
+from datetime import datetime
 import numpy as np
 import pandas as pd
 import dateutil.parser
@@ -23,17 +24,14 @@ def match_candidates(list1, list2):
   else:
     return np.multiply(np.add(list1, list2), np.multiply([weight > 0 for weight in list1], [weight > 0 for weight in list2]))
 
-#%% appsGatherer class:
 class AppsGatherer:
   def __init__(self, os="windows"):
     self.os = os
     if self.os == "windows": self.STARTPATH = "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\"
     self.explorer = Explorer()
     self.get_apps()
-    # print("apps handler constructed")
 
   def get_apps(self):
-    # print("Initializing apps with the start shortcuts")
     start_apps = PSClient.get_PS_table_from_list("Get-StartApps", ["Name"])
     start_apps = [app[0] for app in start_apps]
     apps_table = PSClient.get_PS_table_from_list("Get-ChildItem \"" + self.STARTPATH + "*\" -Recurse | where { ! $_.PSIsContainer }", ["Name", "FullName"])
@@ -128,3 +126,23 @@ class AppsGatherer:
     open_apps = open_apps.append(open_folders)
     open_apps.reset_index(drop=True, inplace=True)
     return open_apps
+
+  def compare_apps(self, new_apps, old_apps):
+    concat_df = pd.concat([new_apps, old_apps], ignore_index=True)
+    duplicated = concat_df.duplicated(
+      subset=['Id', 'App', 'Name', 'Description', 'MainWindowTitle'],
+      keep='first',
+    )
+    ended = [not dup for dup in duplicated[len(new_apps):]] # these are the old apps that have ended
+    now = datetime.now().isoformat()[0:-7]
+    for ind in [i for i, e in enumerate(ended) if e]:
+      if concat_df.loc[ind + len(new_apps.index)]["EndTime"] == "":
+        concat_df.loc[ind + len(new_apps.index)]["EndTime"] = now
+
+    duplicated_start = concat_df.duplicated(keep='last')
+    started = [not dup for dup in duplicated_start[:len(new_apps)]] # these are the new apps that have started
+    for ind in [i for i, e in enumerate(started) if e]:
+      concat_df.loc[ind]["StartTime"] = now
+    return concat_df.drop_duplicates(
+      subset=['Id', 'App', 'Name', 'Description', 'MainWindowTitle'],
+    ).sort_values(["App", "Name", "StartTime", "EndTime"], ignore_index=True)

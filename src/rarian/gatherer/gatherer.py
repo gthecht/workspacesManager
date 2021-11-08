@@ -47,14 +47,14 @@ class Gatherer(threading.Thread):
       }
       self.add_job(job)
 
-      self.data = self.open_apps
+      self.apps = self.open_apps
     except Exception as err:
       print("Failed to gather data with err: " + str(err))
       print("Waiting a bit, and trying to gather again")
       sleep(self.SLEEP_TIME)
       return self.run()
 
-    self.data.to_csv(self.apps_log_file, index=False)
+    self.apps.to_csv(self.apps_log_file, index=False)
     while self.running:
       sleep(self.SLEEP_TIME)
       if not self.running: break
@@ -70,14 +70,13 @@ class Gatherer(threading.Thread):
         }
         self.add_job(job)
 
-        data = self.open_apps
       except Exception as err:
         print("Failed to gather data with err: " + str(err))
         print("Waiting a bit, and trying to gather again")
         continue
       else:
-        self.compare_data(data)
-        self.data.to_csv(self.apps_log_file, index=False)
+        self.apps = self.apps_handler.compare_apps(self.open_apps, self.apps)
+        self.apps.to_csv(self.apps_log_file, index=False)
 
   def gather_files(self):
     project_paths = self.projects_handler.get_proj_dirs()
@@ -98,22 +97,6 @@ class Gatherer(threading.Thread):
 
   def gather_apps(self):
     self.open_apps = self.apps_handler.get_open_apps()
-
-  def compare_data(self, data):
-    # find rows from the old that are duplicated in the new:
-    concat_df = pd.concat([data, self.data], ignore_index=True)
-    duplicated = concat_df.duplicated(keep='first')
-    ended = [not dup for dup in duplicated[len(data):]] # these are the old apps that have ended
-    now = datetime.now().isoformat()
-    for ind in [i for i, e in enumerate(ended) if e]:
-      if concat_df.loc[ind + len(data.index)]["EndTime"] == "":
-        concat_df.loc[ind + len(data.index)]["EndTime"] = now
-
-    duplicated_start = concat_df.duplicated(keep='last')
-    started = [not dup for dup in duplicated_start[:len(data)]] # these are the new apps that have started
-    for ind in [i for i, e in enumerate(started) if e]:
-      concat_df.loc[ind]["StartTime"] = now
-    self.data = concat_df.drop_duplicates().sort_values(["App", "Name", "StartTime", "EndTime"], ignore_index=True)
 
   def stop(self):
     self.running = False

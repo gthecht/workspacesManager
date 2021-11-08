@@ -68,3 +68,7 @@ class TestAppsGatherer:
   def test_get_open_folders(self):
     open_apps = ""
     pass
+
+  def test_compare_apps(self):
+    open_apps = ""
+    pass
