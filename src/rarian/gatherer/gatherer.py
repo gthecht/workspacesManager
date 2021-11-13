@@ -19,7 +19,7 @@ class Gatherer(threading.Thread):
 
     self.running = False
     self.apps_log_file = path.join(self.log_dir, "log-" + datetime.now().strftime('%Y-%m-%dT%H-%M-%S') + ".csv")
-    self.SLEEP_TIME = 10 # time to sleep between data collection - note that gathering the apps takes about 2 seconds
+    self.SLEEP_TIME = 1 # time to sleep between data collection - note that gathering the apps takes about 2 seconds
     super().__init__(name="gatherer", daemon=True)
 
   def add_job(self, job):
@@ -61,12 +61,12 @@ class Gatherer(threading.Thread):
       try:
         self.gather_files()
         self.gather_apps()
+        self.cross_files_apps()
         job = {
           "method": "update",
           "args": {
             "open_files": self.open_files,
-            "open_apps": self.open_apps
-          },
+            "open_apps": self.open_apps          },
         }
         self.add_job(job)
 
@@ -97,6 +97,27 @@ class Gatherer(threading.Thread):
 
   def gather_apps(self):
     self.open_apps = self.apps_handler.get_open_apps()
+
+  def cross_files_apps(self):
+    cross_correlation = []
+    for file_ind in self.open_files.index:
+      file = self.open_files.loc[file_ind]
+      for app_ind in self.open_apps.index:
+        app = self.open_apps.loc[app_ind]
+        if len(file.Name) == 0: continue
+        if file.Name.lower() in app.MainWindowTitle.lower():
+          cross_correlation.append({
+            "FullName": file.FullName,
+            "OpenTime": datetime.now(),
+            "AppName": app.Path,
+            "value": len(file.Name) / len(app.MainWindowTitle),
+          })
+    cross_correlation = pd.DataFrame(cross_correlation)
+    if cross_correlation.empty: self.open_files = cross_correlation
+    else:
+      # Take only the single file with the maximum value: - may want to change this to multiple later on
+      cross_correlation = cross_correlation.loc[cross_correlation.groupby(['AppName'])['value'].idxmax()]
+      self.open_files = self.open_files[self.open_files['FullName'].isin(cross_correlation.FullName)]
 
   def stop(self):
     self.running = False
