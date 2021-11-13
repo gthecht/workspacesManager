@@ -139,4 +139,4 @@ dmypy.json
 logs/*
 
 # Rarian
-.rarian/files.csv
+.rarian/*
