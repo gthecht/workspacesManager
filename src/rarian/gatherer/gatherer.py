@@ -61,12 +61,12 @@ class Gatherer(threading.Thread):
       try:
         self.gather_files()
         self.gather_apps()
+        self.cross_files_apps()
         job = {
           "method": "update",
           "args": {
             "open_files": self.open_files,
-            "open_apps": self.open_apps
-          },
+            "open_apps": self.open_apps          },
         }
         self.add_job(job)
 
@@ -97,6 +97,24 @@ class Gatherer(threading.Thread):
 
   def gather_apps(self):
     self.open_apps = self.apps_handler.get_open_apps()
+
+  def cross_files_apps(self):
+    cross_correlation = []
+    for file_ind in self.open_files.index:
+      for app_ind in self.open_apps.index:
+        file = self.open_files.loc[file_ind]
+        app = self.open_apps.loc[app_ind]
+        file_name = '.'.join(file.Name.split('.')[:-1])
+        if len(file_name) == 0: continue
+        if file_name.lower() in app.MainWindowTitle.lower():
+          cross_correlation.append({
+            "File": file.FullName,
+            "OpenTime": datetime.now(),
+            "AppName": app.Path,
+            "value": len(file_name) / len(app.MainWindowTitle),
+          })
+    print(f'open files log:')
+    [print(f'{row}') for row in cross_correlation]
 
   def stop(self):
     self.running = False
