@@ -15,7 +15,7 @@ test_path_str = os.path.abspath("./test")
 file_path_str = os.path.join(test_path_str, "src", "gatherer", "conftest.py")
 projects_handler = {
   "q": {"list": [], "put": lambda el: projects_handler["q"]["list"].append(el)},
-  "get_proj_paths": lambda : [test_path_str],
+  "get_proj_dirs": lambda : [test_path_str],
   "get_proj_start_time": lambda : datetime.now()
 }
 

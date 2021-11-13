@@ -21,7 +21,6 @@ class FilesGatherer:
       "Directory",
       "FullName"
     ]
-    # print("files handler constructed")
 
   def get_open_files(self, paths, start_time):
     """Get the childitems of the given project"""
@@ -36,8 +35,8 @@ class FilesGatherer:
       start_time = start_time.isoformat()
     child_items = []
     for path in paths:
-      cmd = "Get-ChildItem " + path + \
-            " -Recurse -ErrorAction silentlycontinue " + \
+      cmd = "Get-ChildItem " + os.path.join(path, "*") + \
+            " -ErrorAction silentlycontinue " + \
             "| Where-Object { $_.LastAccessTime -gt \"" + \
             start_time + "\"}"
       new_child_items = PSClient.get_PS_table_from_list(cmd, self.items)

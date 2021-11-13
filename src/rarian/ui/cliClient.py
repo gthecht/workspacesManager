@@ -118,6 +118,7 @@ class CLIent(threading.Thread):
 
   def display_data(self, data):
     if isinstance(data, pd.DataFrame):
+      if data.empty: return
       for name in list(data["Name"]): print(f'- {name}')
       print('\n')
     elif isinstance(data, dict):
