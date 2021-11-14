@@ -141,7 +141,7 @@ class ProjectsHandler(threading.Thread):
     if self.current is None: return None
     if member == "files":
       data = self.projects[self.current].files
-      data.sort_values(by=sort_by, ascending=False, inplace=False)
+      data.sort_values(by=sort_by, ascending=False, inplace=True)
     elif member == "apps": data = self.projects[self.current].apps
     elif member == "notes": data = self.projects[self.current].notes
     elif member == "urls": data = self.projects[self.current].urls
