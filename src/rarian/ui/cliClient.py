@@ -149,24 +149,22 @@ class CLIent(threading.Thread):
     pass
 
   def get_files(self):
-    file = self.choose_data("files", "file")
-    if isinstance(file, pd.Series) or isinstance(file, list):
-      print(file)
-      accept = input("Do you want to open another file?(y/n): ")
-      if accept.lower() == "y":
-        return self.get_files()
+    self.get_data("file")
 
   def open_app(self):
     apps = self.choose_data("apps", "app")
+    pass
 
   def get_apps(self):
-    apps = self.choose_data("apps", "app")
-    if isinstance(file, pd.Series) or isinstance(file, list):
-      print(apps)
-      accept = input("Do you want to another app?(y/n): ")
-      if accept.lower() == "y":
-        return self.get_apps()
+    self.get_data("app")
 
+  def get_data(self, data_type):
+    data = self.choose_data(data_type + 's', data_type)
+    if isinstance(data, pd.Series) or isinstance(data, list):
+      print(data)
+      accept = input(f'Do you want to another {data_type}?(y/n): ')
+      if accept.lower() == "y":
+        return self.get_data(data_type)
 
   def insert_note(self):
     print("Type in your note and hit ENTER...")
