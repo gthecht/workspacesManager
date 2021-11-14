@@ -22,5 +22,5 @@ class TestExplorer:
     output.set_index('Path', inplace=True)
     print(output)
     assert path in output.index
-    assert output.loc[path].Name == 'Users'
-    assert output.loc[path].MainWindowTitle == 'Users'
+    assert output.loc[path].Name == 'File Explorer'
+    assert output.loc[path].MainWindowTitle == 'Users - File Explorer'
