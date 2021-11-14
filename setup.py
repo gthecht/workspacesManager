@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
   name="rarian",
-  version='0.1.0',
+  version='0.1.1',
   author="Gilad Hecht",
   description='workspace manager to help you manage your work',
   extras_require={
