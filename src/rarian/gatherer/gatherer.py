@@ -99,25 +99,22 @@ class Gatherer(threading.Thread):
     self.open_apps = self.apps_handler.get_open_apps()
 
   def cross_files_apps(self):
-    cross_correlation = []
+    cross_correlation = pd.DataFrame(columns=self.open_files.columns)
     for file_ind in self.open_files.index:
       file = self.open_files.loc[file_ind]
       for app_ind in self.open_apps.index:
         app = self.open_apps.loc[app_ind]
         if len(file.Name) == 0: continue
         if file.Name.lower() in app.MainWindowTitle.lower():
-          cross_correlation.append({
-            "FullName": file.FullName,
-            "OpenTime": datetime.now(),
-            "AppName": app.Path,
-            "value": len(file.Name) / len(app.MainWindowTitle),
-          })
-    cross_correlation = pd.DataFrame(cross_correlation)
+          file["App"] = app.Path
+          file["value"] = len(file.Name) / len(app.MainWindowTitle)
+          cross_correlation = cross_correlation.append(file, ignore_index=True)
     if cross_correlation.empty: self.open_files = cross_correlation
     else:
       # Take only the single file with the maximum value: - may want to change this to multiple later on
-      cross_correlation = cross_correlation.loc[cross_correlation.groupby(['AppName'])['value'].idxmax()]
-      self.open_files = self.open_files[self.open_files['FullName'].isin(cross_correlation.FullName)]
+      self.open_files = cross_correlation.loc[
+        cross_correlation.groupby(['App'])['value'].idxmax()
+      ].reset_index(drop=True)
 
   def stop(self):
     self.running = False

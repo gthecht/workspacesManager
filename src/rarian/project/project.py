@@ -97,6 +97,7 @@ class Project:
   def file_add_columns(self, files):
     files["Relevance"] = 0
     files["Open"] = False
+    files["App"] = None
     files["Type"] = [ext.split(".")[-1] for ext in files["Extension"]]
     files["Type"].mask(files["Directory"] == "", "dir", inplace=True)
     # The directory's directory will be itself:
@@ -206,6 +207,7 @@ class Project:
         self.files.at[file_name, "Relevance"], 'UP'
       ), 'UP')
       self.files.at[file_name, "Open"] = True
+      self.files.at[file_name, "App"] = self.open_files.at[file_name, "App"]
 
   def files_update_closed(self):
     open_files = self.files[self.files["Open"] == True]
