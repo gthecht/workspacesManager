@@ -128,9 +128,9 @@ class ProjectsHandler(threading.Thread):
     if self.current is None: return None
     return self.projects[self.current].get_open()
 
-  def get_proj_paths(self):
+  def get_proj_dirs(self):
     if self.current is None: return None
-    return self.projects[self.current].paths
+    return self.projects[self.current].dirs
 
   def get_proj_start_time(self):
     if self.current is None: return None

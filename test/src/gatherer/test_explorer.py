@@ -19,6 +19,8 @@ class TestExplorer:
     path = start_explorer
     explorer_row = get_explorer_row
     output = explorer.get_open_explorers(explorer_row)
-    assert output.loc[0].Name == 'Users'
-    assert output.loc[0].MainWindowTitle == 'Users'
-    assert output.loc[0].Path == path
+    output.set_index('Path', inplace=True)
+    print(output)
+    assert path in output.index
+    assert output.loc[path].Name == 'Users'
+    assert output.loc[path].MainWindowTitle == 'Users'

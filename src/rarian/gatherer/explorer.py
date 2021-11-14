@@ -26,9 +26,13 @@ class Explorer:
       open_dirs_list = self.get_open_directories()
       if len(open_dirs_list) == 0: return open_dirs
       for dir in open_dirs_list:
-        row = explorer_row.copy()
-        row.Name = dir[0]
-        row.MainWindowTitle = dir[0]
+        if dir[0] in list(explorer_row.MainWindowTitle):
+          ind = [ind for ind in explorer_row.index if dir[0] == explorer_row.loc[ind].MainWindowTitle][0]
+        else: ind = [ind for ind in explorer_row.index if '' == explorer_row.loc[ind].MainWindowTitle][0]
+        row = explorer_row.loc[ind].copy()
+        row.Name = 'File Explorer'
+        row.MainWindowTitle =  f'{dir[0]} - File Explorer'
         row.Path = dir[1][8:]
+        row.App = 'File Explorer'
         open_dirs = open_dirs.append(row, ignore_index=True)
       return open_dirs
