@@ -3,10 +3,25 @@ import json
 from time import sleep
 import os
 import pytest
+import math
 import pandas as pd
-from rarian.project.project import Project
+from rarian.project.project import Project, update_relevance
 
-class TestProject:
+class TestProjectClass:
+  def test_update_relevance(self):
+    """should update relevance according to calculations"""
+    assert update_relevance(0, True)  == 0.5
+    assert update_relevance(0.5, True)  == 0.625
+    assert update_relevance(-0.5, True)  == 0
+    assert update_relevance(0.9, True)  == (0.9 ** 2 + 1) / 2
+    assert update_relevance(-0.9, True)  == -math.sqrt(-2 * (-0.9) - 1)
+
+    assert update_relevance(0, False) == -0.5
+    assert update_relevance(0.5, False) == 0
+    assert update_relevance(-0.5, False)  == -0.625
+    assert update_relevance(0.9, False)  == math.sqrt(2 * 0.9 - 1)
+    assert update_relevance(-0.9, False)  == -(0.9 ** 2 + 1) / 2
+
   def test_load_with_proper_path(self, test_proj_path, create_initialized_project):
     create_initialized_project
     Project.load(test_proj_path)
@@ -88,7 +103,7 @@ class TestProject:
     files_df = pd.DataFrame(files)
     new_df = proj.file_add_columns(files_df)
     assert list(new_df.columns) == ["Name", "Extension", "Directory", "Relevance", "Open", "Type"]
-    assert list(new_df["Relevance"]) == [1, 1, 1]
+    assert list(new_df["Relevance"]) == [0, 0, 0]
     assert list(new_df["Open"]) == [False, False, False]
     assert list(new_df["Type"]) == ["type1", "type2", ""]
     assert list(new_df.index) == files["FullName"]
@@ -154,7 +169,7 @@ class TestProject:
     assert proj.files.at[file_name, "Open"] == False
     proj.files_update_open()
     assert proj.files.at[file_name, "Open"] == True
-    assert proj.files.at[file_name, "Relevance"] == prev_file["Relevance"] * (proj.add_rate)
+    assert proj.files.at[file_name, "Relevance"] == update_relevance(update_relevance(prev_file["Relevance"], True), True)
     assert proj.files.at[file_name, "LastAccessTime"] == now
     assert proj.files.at[file_name, "LastWriteTime"] == now
 
@@ -175,7 +190,7 @@ class TestProject:
     assert file_name not in proj.files.index
     proj.files_update_open()
     assert proj.files.at[file_name, "Open"] == True
-    assert proj.files.at[file_name, "Relevance"] == proj.add_rate
+    assert proj.files.at[file_name, "Relevance"] == update_relevance(update_relevance(0, True), True)
     assert proj.files.at[file_name, "LastAccessTime"] == now
     assert proj.files.at[file_name, "LastWriteTime"] == now
 
@@ -234,7 +249,7 @@ class TestProject:
     proj = load_project
     relevance_values = proj.files["Relevance"].copy()
     proj.forget()
-    assert proj.files["Relevance"].equals(relevance_values * proj.forget_rate)
+    assert proj.files["Relevance"].equals(relevance_values.apply(lambda rel: update_relevance(rel, False)))
 
   def test_turn_off(self, load_project):
     proj = load_project
