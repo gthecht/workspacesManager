@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import datetime
 import os
 import sys
 import pandas as pd
@@ -10,7 +10,6 @@ sys.path.insert(1, parent)
 from rarian import powershellClient as PSClient
 
 class Project:
-
   # load existing project from some path
   def load(path):
     if not os.path.isdir(os.path.join(path, ".rarian")):
@@ -45,8 +44,8 @@ class Project:
     files=None,
     apps=[],
     removed_dirs=[],
-    forget_rate=0.99,
-    add_rate=1.1
+    add_rate=10,
+    forget_rate=100
   ):
     self.paths = [os.path.normpath(path) for path in paths]
     self.rarian_path = os.path.join(self.paths[0], ".rarian")
@@ -55,8 +54,8 @@ class Project:
     self.author = author
     self.type = proj_type
     self.start_time = start_time
-    self.forget_rate = forget_rate
     self.add_rate = add_rate
+    self.forget_rate = forget_rate
 
     # files and apps:
     self.file_items = [
@@ -86,8 +85,7 @@ class Project:
       cmd = "Get-ChildItem " + path + \
             " -Recurse -ErrorAction silentlycontinue"
       new_child_items = PSClient.get_PS_table_from_list(cmd, self.file_items)
-      for child_item in new_child_items:
-        child_items.append(child_item)
+      child_items.extend(new_child_items)
     self.files = pd.DataFrame(child_items, columns=self.file_items)
     # parse time fields:
     self.files = PSClient.parse_time(
@@ -97,7 +95,7 @@ class Project:
     self.files = self.file_add_columns(self.files)
 
   def file_add_columns(self, files):
-    files["Relevance"] = 1
+    files["Relevance"] = 0
     files["Open"] = False
     files["Type"] = [ext.split(".")[-1] for ext in files["Extension"]]
     files["Type"].mask(files["Directory"] == "", "dir", inplace=True)
@@ -204,7 +202,9 @@ class Project:
         self.open_files.at[file_name, "LastWriteTime"]
       self.files.at[file_name, "LastAccessTime"] = \
         self.open_files.at[file_name, "LastAccessTime"]
-      self.files.at[file_name, "Relevance"] *= self.add_rate
+      self.files.at[file_name, "Relevance"] = self.update_relevance(self.update_relevance(
+        self.files.at[file_name, "Relevance"], 'UP'
+      ), 'UP')
       self.files.at[file_name, "Open"] = True
 
   def files_update_closed(self):
@@ -220,8 +220,16 @@ class Project:
     pass
 
   def forget(self):
-    self.files["Relevance"] *= self.forget_rate
-    # self.apps["Relevance"] *= self.forget_rate
+    self.files["Relevance"] = self.files["Relevance"].apply(lambda rel: self.update_relevance(rel, 'DOWN'))
+    # do the same for apps
+
+  def update_relevance(self, relevance, direction='UP'):
+    assert relevance >= 0 and relevance <= 1
+    if direction == 'UP':
+      return 1 - self.add_rate * (1 - relevance) / (1 - relevance + self.add_rate)
+    elif direction == 'DOWN':
+      return self.forget_rate * relevance / (relevance + self.forget_rate)
+    else: raise ValueError('up_down must be UP or DOWN')
 
   def turn_off(self):
     # MAKE ALL FILES CLOSED - we may want to write them as open so that next time we can open them immediately
