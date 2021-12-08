@@ -1,7 +1,6 @@
-from datetime import date, datetime
+from datetime import datetime
 import os
 import sys
-import math
 import pandas as pd
 import numpy as np
 import json
@@ -9,15 +8,6 @@ import json
 parent = os.path.abspath('./src')
 sys.path.insert(1, parent)
 from rarian import powershellClient as PSClient
-
-def update_relevance(relevance, up_down=True):
-  # up_down = true: up, up_down = false: down
-  if up_down:
-    if relevance >= 0: return (relevance ** 2 + 1) / 2
-    else: return -math.sqrt(-2 * relevance - 1)
-  else:
-    if relevance <= 0: return -(relevance ** 2 + 1) / 2
-    else: return math.sqrt(2 * relevance - 1)
 
 class Project:
   # load existing project from some path
@@ -53,7 +43,9 @@ class Project:
     dirs=None,
     files=None,
     apps=[],
-    removed_dirs=[]
+    removed_dirs=[],
+    add_rate=10,
+    forget_rate=100
   ):
     self.paths = [os.path.normpath(path) for path in paths]
     self.rarian_path = os.path.join(self.paths[0], ".rarian")
@@ -62,6 +54,8 @@ class Project:
     self.author = author
     self.type = proj_type
     self.start_time = start_time
+    self.add_rate = add_rate
+    self.forget_rate = forget_rate
 
     # files and apps:
     self.file_items = [
@@ -208,9 +202,9 @@ class Project:
         self.open_files.at[file_name, "LastWriteTime"]
       self.files.at[file_name, "LastAccessTime"] = \
         self.open_files.at[file_name, "LastAccessTime"]
-      self.files.at[file_name, "Relevance"] = update_relevance(update_relevance(
-        self.files.at[file_name, "Relevance"], True
-      ), True)
+      self.files.at[file_name, "Relevance"] = self.update_relevance(self.update_relevance(
+        self.files.at[file_name, "Relevance"], 'UP'
+      ), 'UP')
       self.files.at[file_name, "Open"] = True
 
   def files_update_closed(self):
@@ -226,8 +220,16 @@ class Project:
     pass
 
   def forget(self):
-    self.files["Relevance"] = self.files["Relevance"].apply(lambda rel: update_relevance(rel, False))
+    self.files["Relevance"] = self.files["Relevance"].apply(lambda rel: self.update_relevance(rel, 'DOWN'))
     # do the same for apps
+
+  def update_relevance(self, relevance, direction='UP'):
+    assert relevance >= 0 and relevance <= 1
+    if direction == 'UP':
+      return 1 - self.add_rate * (1 - relevance) / (1 - relevance + self.add_rate)
+    elif direction == 'DOWN':
+      return self.forget_rate * relevance / (relevance + self.forget_rate)
+    else: raise ValueError('up_down must be UP or DOWN')
 
   def turn_off(self):
     # MAKE ALL FILES CLOSED - we may want to write them as open so that next time we can open them immediately
