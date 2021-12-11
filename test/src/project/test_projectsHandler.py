@@ -383,6 +383,15 @@ class TestProjectsHandler:
     data = proj_handler.get_project_data("no such data member")
     assert data == None
 
+  def test_opened_file(self, create_project_handler, mocker):
+    """Should call project update_opened_file"""
+    proj_handler = create_project_handler
+    file = "file"
+    app = "app"
+    mock = mocker.patch("rarian.Project.update_opened_file")
+    proj_handler.opened_file(file, app)
+    mock.called_once_with(file, app)
+
   def test_stop(self, create_project_handler):
     proj_handler = create_project_handler
     assert proj_handler.running == True
