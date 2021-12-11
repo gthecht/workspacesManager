@@ -105,7 +105,7 @@ class CLIent(threading.Thread):
     if isinstance(selected, pd.DataFrame):
       print("Your choice:", selected.index[selected_num])
       print(self.end_segment)
-      return selected.iloc[selected_num]
+      return selected.iloc[[selected_num]]
     elif isinstance(selected, list):
       print("Your choice:", selected[selected_num])
       print(self.end_segment)
@@ -146,7 +146,12 @@ class CLIent(threading.Thread):
 
   def open_file(self):
     file = self.choose_data("files", "file")
-    pass
+    if file is None: return
+    app = self.choose_data("apps", "app")
+    if app is None: app = file.App[0]
+    else: app = app.Path[0]
+    print(f'opening {file.index[0]} with {app}')
+    self.executor.open_file(file, app)
 
   def get_files(self):
     self.get_data("file")
