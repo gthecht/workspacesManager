@@ -148,6 +148,10 @@ class ProjectsHandler(threading.Thread):
     else: raise ValueError("undefined data member")
     return data
 
+  def opened_file(self, file, app):
+    if self.current is None: return None
+    return self.projects[self.current].update_opened_file(file, app)
+
   def stop(self):
     self.save()
     self.running = False
