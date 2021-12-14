@@ -16,7 +16,7 @@ file_items = [
   "FullName"
 ]
 test_proj = os.path.abspath("./test/testProject")
-tmp_proj = os.path.abspath("./test/tmpProject")
+tmp_proj = os.path.abspath("./test/tmp Project")
 empty_proj = os.path.abspath("./test/emptyProject")
 proj_name = "test project"
 project_dict = {

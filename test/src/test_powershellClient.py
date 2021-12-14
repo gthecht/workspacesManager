@@ -18,7 +18,7 @@ class TestPSClient:
 
   def test_get_PS_table_from_list(self):
     path = os.path.abspath(".")
-    cmd = "Get-ChildItem " + path + " -Force"
+    cmd = "Get-ChildItem '" + path + "' -Force"
     items = ["Name"]
     file_names = psClient.get_PS_table_from_list(cmd, items)
     file_names_check = [name[0] for name in file_names]

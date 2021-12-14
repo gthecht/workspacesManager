@@ -82,8 +82,8 @@ class Project:
   def get_files(self):
     child_items = []
     for path in self.paths:
-      cmd = "Get-ChildItem " + path + \
-            " -Recurse -ErrorAction silentlycontinue"
+      cmd = "Get-ChildItem '" + path + \
+            "' -Recurse -ErrorAction silentlycontinue"
       new_child_items = PSClient.get_PS_table_from_list(cmd, self.file_items)
       child_items.extend(new_child_items)
     self.files = pd.DataFrame(child_items, columns=self.file_items)
@@ -109,8 +109,8 @@ class Project:
   # get directories:
   def update_directories(self):
     for path in self.paths:
-      cmd = "Get-ChildItem " + path + \
-            " -Directory -Recurse -ErrorAction silentlycontinue"
+      cmd = "Get-ChildItem '" + path + \
+            "' -Directory -Recurse -ErrorAction silentlycontinue"
       new_child_items = PSClient.get_PS_table_from_list(cmd, ["FullName"])
       for child_item in new_child_items:
         child_item = child_item[0]

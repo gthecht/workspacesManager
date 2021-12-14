@@ -35,7 +35,7 @@ class FilesGatherer:
       start_time = start_time.isoformat()
     child_items = []
     for path in paths:
-      cmd = "Get-ChildItem " + os.path.join(path, "*") + \
+      cmd = "Get-ChildItem '" + os.path.join(path, "*'") + \
             " -ErrorAction silentlycontinue " + \
             "| Where-Object { $_.LastAccessTime -gt \"" + \
             start_time + "\"}"

@@ -33,7 +33,7 @@ class TestFilesGatherer:
     mock = mocker.patch("rarian.PSClient.get_PS_table_from_list")
     files_gatherer.get_files_from_powershell([test_path], start_time.isoformat())
     assert mock.call_count == 1
-    mock.assert_called_once_with("Get-ChildItem " + test_path + "\\*" + \
+    mock.assert_called_once_with("Get-ChildItem '" + test_path + "\\*'" + \
       " -ErrorAction silentlycontinue " + \
       "| Where-Object { $_.LastAccessTime -gt \"" + \
       start_time.isoformat() + "\"}", files_gatherer.items)
@@ -44,7 +44,7 @@ class TestFilesGatherer:
     mock = mocker.patch("rarian.PSClient.get_PS_table_from_list")
     files_gatherer.get_files_from_powershell([test_path, test_path, test_path], start_time.isoformat())
     assert mock.call_count == 3
-    mock.assert_called_with("Get-ChildItem " + test_path + "\\*" + \
+    mock.assert_called_with("Get-ChildItem '" + test_path + "\\*'" + \
       " -ErrorAction silentlycontinue " + \
       "| Where-Object { $_.LastAccessTime -gt \"" + \
       start_time.isoformat() + "\"}", files_gatherer.items)
