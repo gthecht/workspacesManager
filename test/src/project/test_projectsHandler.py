@@ -261,9 +261,8 @@ class TestProjectsHandler:
     proj_handler = create_project_handler
     proj_handler.current = list(proj_handler.projects.keys())[0]
     open_files = pd.DataFrame()
-    open_apps = pd.DataFrame()
     mock = mocker.patch("rarian.Project.save")
-    proj_handler.update(open_files, open_apps)
+    proj_handler.update(open_files)
     assert mock.call_count == 1
 
   def test_update_for_no_current(
@@ -274,9 +273,8 @@ class TestProjectsHandler:
     """Shouldn't call update if there is no current project"""
     proj_handler = create_project_handler
     open_files = pd.DataFrame()
-    open_apps = pd.DataFrame()
     mock = mocker.patch("rarian.Project.save")
-    proj_handler.update(open_files, open_apps)
+    proj_handler.update(open_files)
     assert mock.call_count == 0
 
   def test_get_open_for_current(

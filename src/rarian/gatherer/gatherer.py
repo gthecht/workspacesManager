@@ -35,28 +35,9 @@ class Gatherer(threading.Thread):
 
   def run(self):
     self.running = True
-    try:
-      self.gather_files()
-      self.gather_apps()
-      job = {
-        "method": "update",
-        "args": {
-          "open_files": self.open_files,
-          "open_apps": self.open_apps
-        },
-      }
-      self.add_job(job)
-
-      self.apps = self.open_apps
-    except Exception as err:
-      print("Failed to gather data with err: " + str(err))
-      print("Waiting a bit, and trying to gather again")
-      sleep(self.SLEEP_TIME)
-      return self.run()
-
-    self.apps.to_csv(self.apps_log_file, index=False)
     while self.running:
       sleep(self.SLEEP_TIME)
+      now = datetime.now().isoformat()[0:-7]
       if not self.running: break
       try:
         self.gather_files()
@@ -66,17 +47,15 @@ class Gatherer(threading.Thread):
           "method": "update",
           "args": {
             "open_files": self.open_files,
-            "open_apps": self.open_apps          },
+          },
         }
         self.add_job(job)
+        self.log(now)
 
       except Exception as err:
         print("Failed to gather data with err: " + str(err))
         print("Waiting a bit, and trying to gather again")
         continue
-      else:
-        self.apps = self.apps_handler.compare_apps(self.open_apps, self.apps)
-        self.apps.to_csv(self.apps_log_file, index=False)
 
   def gather_files(self):
     project_paths = self.projects_handler.get_proj_dirs()
@@ -115,6 +94,43 @@ class Gatherer(threading.Thread):
       self.open_files = cross_correlation.loc[
         cross_correlation.groupby(['App'])['value'].idxmax()
       ].reset_index(drop=True)
+
+  def log(self, now):
+    if self.open_apps.empty: return
+    job = {
+      "method": "get_current",
+      "args": {},
+      "reply_q": self.reply_q
+    }
+    current_proj = self.add_job(job)
+    log = self.open_apps.copy()
+    log["Project"] = current_proj
+    log["TimeStamp"] = now
+    self.add_open_file_paths(log)
+    log = self.clean_log(log)
+    log.to_csv(self.apps_log_file, mode='a', index=False, header=False)
+
+  def add_open_file_paths(self, log):
+    log["FilePath"] = ''
+    if not self.open_files.empty:
+      log["FilePath"][log["Path"].isin(self.open_files["App"])] = \
+        self.open_files.index[self.open_files["App"].isin(log["Path"])]
+    return log
+
+  def clean_log(self, log):
+    clean_log = log.drop(
+      [
+        "Id",
+        "Name",
+        "Description",
+        "MainWindowTitle",
+        "StartTime",
+        "EndTime",
+      ],
+      axis=1
+    )
+    clean_log = clean_log.rename(columns={"Path": "AppPath"})
+    return clean_log
 
   def stop(self):
     self.running = False

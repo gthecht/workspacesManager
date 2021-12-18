@@ -183,13 +183,11 @@ class Project:
     self.update_file_relevance(file_index)
     return self.files.loc[file_index]
 
-  def update(self, open_files, open_apps):
+  def update(self, open_files):
     if not open_files.empty and open_files.index.name != "FullName":
       open_files.set_index("FullName", inplace=True)
     self.open_files = open_files
-    self.open_apps = open_apps
     self.files_update()
-    self.apps_update()
     self.update_directories()
     self.forget()
 
@@ -240,10 +238,6 @@ class Project:
     closed = list(set(open_files.index) - set(still_open))
     for closed_file in closed:
       self.files.at[closed_file, "Open"] = False
-
-  def apps_update(self):
-    if self.open_apps.empty: pass
-    pass
 
   def forget(self):
     self.files["Relevance"] = self.files["Relevance"].apply(lambda rel: self.update_relevance(rel, 'DOWN'))

@@ -117,9 +117,9 @@ class ProjectsHandler(threading.Thread):
     raise NotImplementedError
 
   # Gather:
-  def update(self, open_files, open_apps):
+  def update(self, open_files):
     if self.current is None: return None
-    self.projects[self.current].update(open_files, open_apps)
+    self.projects[self.current].update(open_files)
     self.save()
 
   # Get:
