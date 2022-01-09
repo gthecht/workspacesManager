@@ -19,6 +19,8 @@ projects_handler = {
   "get_proj_start_time": lambda : datetime.now()
 }
 
+gatherer = Gatherer(test_path_str, projects_handler, OS)
+
 # fixtures:
 @pytest.fixture
 def test_path():
@@ -77,7 +79,7 @@ def get_explorer_row():
 
 @pytest.fixture
 def get_gatherer():
-  return Gatherer(test_path_str, projects_handler, OS)
+  return gatherer
 
 @pytest.fixture
 def get_projects_handler():
