@@ -261,9 +261,8 @@ class TestProjectsHandler:
     proj_handler = create_project_handler
     proj_handler.current = list(proj_handler.projects.keys())[0]
     open_files = pd.DataFrame()
-    open_apps = pd.DataFrame()
     mock = mocker.patch("rarian.Project.save")
-    proj_handler.update(open_files, open_apps)
+    proj_handler.update(open_files)
     assert mock.call_count == 1
 
   def test_update_for_no_current(
@@ -274,9 +273,8 @@ class TestProjectsHandler:
     """Shouldn't call update if there is no current project"""
     proj_handler = create_project_handler
     open_files = pd.DataFrame()
-    open_apps = pd.DataFrame()
     mock = mocker.patch("rarian.Project.save")
-    proj_handler.update(open_files, open_apps)
+    proj_handler.update(open_files)
     assert mock.call_count == 0
 
   def test_get_open_for_current(
@@ -382,6 +380,15 @@ class TestProjectsHandler:
     proj_handler = create_project_handler
     data = proj_handler.get_project_data("no such data member")
     assert data == None
+
+  def test_opened_file(self, create_project_handler, mocker):
+    """Should call project update_opened_file"""
+    proj_handler = create_project_handler
+    file = "file"
+    app = "app"
+    mock = mocker.patch("rarian.Project.update_opened_file")
+    proj_handler.opened_file(file, app)
+    mock.called_once_with(file, app)
 
   def test_stop(self, create_project_handler):
     proj_handler = create_project_handler

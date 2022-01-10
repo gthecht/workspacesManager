@@ -99,6 +99,7 @@ class Project:
     files["Open"] = False
     files["Type"] = [ext.split(".")[-1] for ext in files["Extension"]]
     files["Type"].mask(files["Directory"] == "", "dir", inplace=True)
+    files["App"] = None
     # The directory's directory will be itself:
     if "FullName" not in files.columns: files.reset_index(inplace=True)
     files["Directory"].mask(files["Directory"] == "", \
@@ -160,13 +161,33 @@ class Project:
     self.files = self.files[[sub_dir not in directory for directory in self.files["Directory"]]]
     # self.files.reset_index(drop=True, inplace=True)
 
-  def update(self, open_files, open_apps):
+  def update_relevance(self, relevance, direction='UP', times=1):
+    assert relevance >= 0 and relevance <= 1
+    if times > 1: relevance = self.update_relevance(relevance, direction, times - 1)
+    if direction == 'UP':
+      return 1 - self.add_rate * (1 - relevance) / (1 - relevance + self.add_rate)
+    elif direction == 'DOWN':
+      return self.forget_rate * relevance / (relevance + self.forget_rate)
+    else: raise ValueError('up_down must be UP or DOWN')
+
+  def update_file_relevance(self, file_index, times=10):
+    self.files.at[file_index, "Relevance"] = self.update_relevance(
+      self.files.at[file_index, "Relevance"],
+      "UP",
+      times
+    )
+
+  def update_opened_file(self, file, app):
+    file_index = file.index[0]
+    self.files.at[file_index, "App"] = app
+    self.update_file_relevance(file_index)
+    return self.files.loc[file_index]
+
+  def update(self, open_files):
     if not open_files.empty and open_files.index.name != "FullName":
       open_files.set_index("FullName", inplace=True)
     self.open_files = open_files
-    self.open_apps = open_apps
     self.files_update()
-    self.apps_update()
     self.update_directories()
     self.forget()
 
@@ -202,10 +223,13 @@ class Project:
         self.open_files.at[file_name, "LastWriteTime"]
       self.files.at[file_name, "LastAccessTime"] = \
         self.open_files.at[file_name, "LastAccessTime"]
-      self.files.at[file_name, "Relevance"] = self.update_relevance(self.update_relevance(
-        self.files.at[file_name, "Relevance"], 'UP'
-      ), 'UP')
+      self.files.at[file_name, "Relevance"] = self.update_relevance(
+        self.files.at[file_name, "Relevance"],
+        'UP',
+        2,
+      )
       self.files.at[file_name, "Open"] = True
+      self.files.at[file_name, "App"] = self.open_files.at[file_name, "App"]
 
   def files_update_closed(self):
     open_files = self.files[self.files["Open"] == True]
@@ -215,21 +239,9 @@ class Project:
     for closed_file in closed:
       self.files.at[closed_file, "Open"] = False
 
-  def apps_update(self):
-    if self.open_apps.empty: pass
-    pass
-
   def forget(self):
     self.files["Relevance"] = self.files["Relevance"].apply(lambda rel: self.update_relevance(rel, 'DOWN'))
     # do the same for apps
-
-  def update_relevance(self, relevance, direction='UP'):
-    assert relevance >= 0 and relevance <= 1
-    if direction == 'UP':
-      return 1 - self.add_rate * (1 - relevance) / (1 - relevance + self.add_rate)
-    elif direction == 'DOWN':
-      return self.forget_rate * relevance / (relevance + self.forget_rate)
-    else: raise ValueError('up_down must be UP or DOWN')
 
   def turn_off(self):
     # MAKE ALL FILES CLOSED - we may want to write them as open so that next time we can open them immediately

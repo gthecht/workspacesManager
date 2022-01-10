@@ -1,5 +1,5 @@
-FullName,Name,LastWriteTime,LastAccessTime,Extension,Directory,Relevance,Open,Type
-C:\Users\GiladHecht\Workspace\workspacesManager\test\tmp Project\.rarian,.rarian,2021-07-22T19:01:19,2021-07-23T14:32:17,.rarian,C:\Users\GiladHecht\Workspace\workspacesManager\test\tmp Project\.rarian,1.0,False,rarian
-C:\Users\GiladHecht\Workspace\workspacesManager\test\tmp Project\.rarian\data.json,data.json,2021-07-23T14:45:22,2021-07-23T14:45:22,.json,C:\Users\GiladHecht\Workspace\workspacesManager\test\tmp Project\.rarian,1.0,False,json
-C:\Users\GiladHecht\Workspace\workspacesManager\test\tmp Project\.rarian\files.csv,files.csv,2021-07-23T14:45:22,2021-07-23T14:45:22,.csv,C:\Users\GiladHecht\Workspace\workspacesManager\test\tmp Project\.rarian,1.0,False,csv
-C:\Users\GiladHecht\Workspace\workspacesManager\test\tmp Project\testFile.py,testFile.py,2021-07-22T19:17:45,2021-07-22T19:17:45,.py,C:\Users\GiladHecht\Workspace\workspacesManager\test\tmp Project,1.0,False,py
+FullName,Name,LastWriteTime,LastAccessTime,Extension,Directory,Relevance,Open,Type,App,
+C:\Users\GiladHecht\Workspace\workspacesManager\test\tmp Project\.rarian,.rarian,2021-07-22T19:01:19,2021-07-23T14:32:17,.rarian,C:\Users\GiladHecht\Workspace\workspacesManager\test\tmpProject\.rarian,0.78,False,rarian,C:\Users\GiladHecht\AppData\Local\Programs\Microsoft VS Code\Code.exe,
+C:\Users\GiladHecht\Workspace\workspacesManager\test\tmp Project\.rarian\data.json,data.json,2021-07-23T14:45:22,2021-07-23T14:45:22,.json,C:\Users\GiladHecht\Workspace\workspacesManager\test\tmpProject\.rarian,0.0,False,json,,
+C:\Users\GiladHecht\Workspace\workspacesManager\test\tmp Project\.rarian\files.csv,files.csv,2021-07-23T14:45:22,2021-07-23T14:45:22,.csv,C:\Users\GiladHecht\Workspace\workspacesManager\test\tmpProject\.rarian,0.0012,False,csv,C:\Program Files\Mozilla Firefox\firefox.exe,
+C:\Users\GiladHecht\Workspace\workspacesManager\test\tmp Project\testFile.py,testFile.py,2021-07-22T19:17:45,2021-07-22T19:17:45,.py,C:\Users\GiladHecht\Workspace\workspacesManager\test\tmpProject,0.94,False,py,C:\Users\GiladHecht\AppData\Local\Programs\Microsoft VS Code\Code.exe,

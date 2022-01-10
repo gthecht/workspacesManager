@@ -1,6 +1,8 @@
 import pandas as pd
 import queue
 
+from rarian import powershellClient as PSClient
+
 class Executor:
   def __init__(self, projects_handler, quit, os="windows") -> None:
     self.projects_handler = projects_handler
@@ -58,7 +60,6 @@ class Executor:
       "args": {}
     }
     return self.add_job(job)
-    self.projects_handler.close_project()
 
   # Insert new:
   def new_project(
@@ -89,16 +90,27 @@ class Executor:
       "reply_q": self.reply_q
     }
     return self.add_job(job)
-    return self.projects_handler.new_project(
-      paths, name, proj_type, author, start_time, dirs, files, apps
-    )
 
   def new_file(self, path=None):
     "Create new file"
     raise NotImplementedError
 
+  def open_file(self, file, app=""):
+    "Open file with app"
+    if app == "": cmd = f'Invoke-Item "{file.index[0]}"'
+    else: cmd = f'& "{app}" "{file.index[0]}"'
+    PSClient.run_powershell(cmd)
+    job = {
+      "method": "opened_file",
+      "args": {
+        "file": file,
+        "app": app,
+      },
+    }
+    return self.add_job(job)
+
   def open_app(self, name=None, path=None):
-    "Create new app"
+    "Open an app"
     raise NotImplementedError
 
   def new_note(self, text, link=None):
@@ -115,7 +127,6 @@ class Executor:
       "reply_q": self.reply_q
     }
     return self.add_job(job)
-    self.projects_handler.remove_sub_dir(path)
 
   # Get:
   def get_open(self):
@@ -126,7 +137,6 @@ class Executor:
       "reply_q": self.reply_q
     }
     return self.add_job(job)
-    return self.projects_handler.get_open()
 
   def get_current(self):
     "Get the current project"
@@ -136,7 +146,6 @@ class Executor:
       "reply_q": self.reply_q
     }
     return self.add_job(job)
-    return self.projects_handler.get_current()
 
   def get_data(self, member, n=1, sort_by="Relevance"):
     "Get top n of member (by relevance)"
@@ -150,7 +159,7 @@ class Executor:
       "args": {
         "member": member,
         "sort_by": sort_by
-         },
+      },
       "reply_q": self.reply_q
     }
     data = self.add_job(job)
@@ -180,34 +189,3 @@ class Executor:
 
   def stop(self):
     self.running = False
-
-if __name__ == '__main__':
-  import os
-  import sys
-  project = os.path.abspath('./src/project')
-  sys.path.insert(1, project)
-  from projectsHandler import ProjectsHandler
-
-  projects_handler = ProjectsHandler([os.path.abspath('.')], "windows")
-  executor = Executor(projects_handler)
-  projects_handler.start()
-
-  executor.set_current(name="workspacesManager")
-  assert executor.get_current() == "workspacesManager"
-  executor.close_project()
-  assert executor.get_current() == None
-  assert executor.get_data("files", 3) == None
-
-  executor.set_current(name="workspacesManager")
-  print("open:")
-  print(executor.get_open())
-  print("files:")
-  print(executor.get_data("files", 3))
-  print("apps:")
-  print(executor.get_data("apps", 3))
-  print("notes:")
-  print(executor.get_data("notes", 3))
-  print("urls:")
-  print(executor.get_data("urls", 3))
-  print("projects:")
-  print(executor.get_data("projects", 3))

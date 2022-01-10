@@ -73,7 +73,7 @@ class TestProjectClass:
     proj = init_new_project
     columns = proj.file_items
     columns.remove("FullName")
-    columns.extend(["Relevance", "Open", "Type"])
+    columns.extend(["Relevance", "Open", "Type", "App"])
     assert list(proj.files.columns) == columns
     assert proj.files["Name"][0] == "testFile.py"
     assert len(proj.files.index) == 1
@@ -88,7 +88,7 @@ class TestProjectClass:
     }
     files_df = pd.DataFrame(files)
     new_df = proj.file_add_columns(files_df)
-    assert list(new_df.columns) == ["Name", "Extension", "Directory", "Relevance", "Open", "Type"]
+    assert list(new_df.columns) == ["Name", "Extension", "Directory", "Relevance", "Open", "Type", "App"]
     assert list(new_df["Relevance"]) == [0, 0, 0]
     assert list(new_df["Open"]) == [False, False, False]
     assert list(new_df["Type"]) == ["type1", "type2", ""]
@@ -143,6 +143,61 @@ class TestProjectClass:
     assert proj.update_relevance(0.9, 'DOWN')  == proj.forget_rate * 0.9 / (0.9 + proj.forget_rate)
     assert proj.update_relevance(1, 'DOWN')  == proj.forget_rate / (1 + proj.forget_rate)
 
+  def test_update_relevance_with_times(self, load_project):
+    proj = load_project
+    """should update relevance according to calculations multiple times"""
+    assert proj.update_relevance(0, 'UP', 1)  == 1 - proj.add_rate / (1 + proj.add_rate)
+    assert proj.update_relevance(0.5, 'UP', 2)  == proj.update_relevance(
+      proj.update_relevance(0.5, 'UP', 1), 'UP', 1
+    )
+
+    assert proj.update_relevance(0, 'DOWN', 10) == 0
+    assert proj.update_relevance(0.9, 'DOWN', 3)  == proj.update_relevance(
+      proj.update_relevance(
+        proj.update_relevance(0.9, 'DOWN', 1), 'DOWN', 1
+      ), 'DOWN', 1
+    )
+
+  def test_update_file_relevance_with_default_times(self, load_project, mocker):
+    proj = load_project
+    mock = mocker.patch("rarian.Project.update_relevance")
+    file_index = proj.files.index[0]
+    relevance = proj.files.at[file_index, "Relevance"]
+    proj.update_file_relevance(file_index)
+    assert mock.call_count == 1
+    mock.assert_called_once_with(relevance, "UP", 10)
+
+  def test_update_file_relevance_with_given_times(self, load_project, mocker):
+    proj = load_project
+    mock = mocker.patch("rarian.Project.update_relevance")
+    file_index = proj.files.index[0]
+    relevance = proj.files.at[file_index, "Relevance"]
+    proj.update_file_relevance(file_index, 3)
+    assert mock.call_count == 1
+    mock.assert_called_once_with(relevance, "UP", 3)
+
+  def update_opened_file_with_app(self, load_project, mocker):
+    proj = load_project
+    mock = mocker.path("rarian.Project.update_file_relevance")
+    file = proj.files.iloc[[1]]
+    app = " some sort of app"
+    out = proj.update_opened_file(file, app)
+    mock.assert_called_once_with(file.index[0])
+    assert out.App.iloc[[0]] == app
+    assert out.index.iloc[[0]] == file.index[0]
+    assert proj.files.iloc[[1]].App == app
+
+
+  def update_opened_file_without_app(self, load_project, mocker):
+    proj = load_project
+    mock = mocker.path("rarian.Project.update_file_relevance")
+    file = proj.files.iloc[[1]]
+    app = ""
+    out = proj.update_opened_file(file, app)
+    mock.assert_called_once_with(file.index[0])
+    assert out.App.iloc[[0]] == app
+    assert out.index.iloc[[0]] == file.index[0]
+    assert proj.files.iloc[[1]].App == app
 
   def test_files_update_open_on_empty(self, load_project):
     proj = load_project
@@ -163,15 +218,15 @@ class TestProjectClass:
       "Extension": [".py"],
       "Directory": [test_proj_path],
       "Type": ["py"],
+      "App": ["app"],
     })
     proj.open_files.set_index("FullName", inplace=True)
     prev_file = proj.files.loc[file_name]
     assert proj.files.at[file_name, "Open"] == False
     proj.files_update_open()
     assert proj.files.at[file_name, "Open"] == True
-    assert proj.files.at[file_name, "Relevance"] == proj.update_relevance(
-      proj.update_relevance(prev_file["Relevance"], 'UP'), 'UP'
-    )
+    assert proj.files.at[file_name, "App"] == "app"
+    assert proj.files.at[file_name, "Relevance"] == proj.update_relevance(prev_file["Relevance"], 'UP', 2)
     assert proj.files.at[file_name, "LastAccessTime"] == now
     assert proj.files.at[file_name, "LastWriteTime"] == now
 
@@ -187,11 +242,13 @@ class TestProjectClass:
       "Extension": [".txt"],
       "Directory": ["\\".join(file_name.split("\\")[:-1])],
       "Type": ["txt"],
+      "App": ["app"],
     })
     proj.open_files.set_index("FullName", inplace=True)
     assert file_name not in proj.files.index
     proj.files_update_open()
     assert proj.files.at[file_name, "Open"] == True
+    assert proj.files.at[file_name, "App"] == "app"
     assert proj.files.at[file_name, "Relevance"] == proj.update_relevance(proj.update_relevance(0, 'UP'), 'UP')
     assert proj.files.at[file_name, "LastAccessTime"] == now
     assert proj.files.at[file_name, "LastWriteTime"] == now

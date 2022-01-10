@@ -117,9 +117,9 @@ class ProjectsHandler(threading.Thread):
     raise NotImplementedError
 
   # Gather:
-  def update(self, open_files, open_apps):
+  def update(self, open_files):
     if self.current is None: return None
-    self.projects[self.current].update(open_files, open_apps)
+    self.projects[self.current].update(open_files)
     self.save()
 
   # Get:
@@ -147,6 +147,10 @@ class ProjectsHandler(threading.Thread):
     elif member == "urls": data = self.projects[self.current].urls
     else: raise ValueError("undefined data member")
     return data
+
+  def opened_file(self, file, app):
+    if self.current is None: return None
+    return self.projects[self.current].update_opened_file(file, app)
 
   def stop(self):
     self.save()
