@@ -59,8 +59,12 @@ class TestProjectClass:
     assert proj.type == "test"
     assert proj.author == "pytest"
 
-  def test_path(self, empty_proj_path, create_uninitialized_project):
+  def test_path(self, empty_proj_path, create_uninitialized_project, mocker):
     create_uninitialized_project
+    mocker.patch(
+      "rarian.powershellClient.get_PS_table_from_list",
+      return_value = []
+    )
     proj = Project(
       [empty_proj_path, empty_proj_path + "2"],
       proj_type="test",
