@@ -26,6 +26,15 @@ project_dict = {
   "author": "pytest",
 }
 
+def init_project():
+  shutil.copytree(test_proj, empty_proj)
+  shutil.rmtree(os.path.join(empty_proj, ".rarian"))
+  proj_from_dict = Project(**project_dict)
+  shutil.rmtree(empty_proj)
+  return proj_from_dict
+
+proj_from_dict = init_project()
+
 open_files = pd.DataFrame()
 
 # fixtures:
@@ -65,8 +74,8 @@ def load_project():
   shutil.rmtree(tmp_proj)
 
 @pytest.fixture
-def init_new_project(proj_dict=project_dict):
-  return Project(**proj_dict)
+def init_new_project():
+  return proj_from_dict
 
 @pytest.fixture
 def add_new_file():

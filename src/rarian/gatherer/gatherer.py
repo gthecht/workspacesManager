@@ -12,13 +12,16 @@ class Gatherer(threading.Thread):
   def __init__(self, log_dir, projects_handler, os="windows"):
     self.log_dir = log_dir
     self.os = os
-    self.apps_handler = AppsGatherer(self.os)
-    self.files_handler = FilesGatherer(self.os)
+    self.apps_gatherer = AppsGatherer(self.os)
+    self.files_gatherer = FilesGatherer(self.os)
     self.projects_handler = projects_handler
     self.reply_q = queue.Queue()
 
     self.running = False
-    self.apps_log_file = path.join(self.log_dir, "log-" + datetime.now().strftime('%Y-%m-%dT%H-%M-%S') + ".csv")
+    self.apps_log_file = path.join(
+      self.log_dir,
+      "log-" + datetime.now().strftime('%Y-%m-%dT%H-%M-%S') + ".csv"
+    )
     self.SLEEP_TIME = 1 # time to sleep between data collection - note that gathering the apps takes about 2 seconds
     super().__init__(name="gatherer", daemon=True)
 
@@ -36,26 +39,28 @@ class Gatherer(threading.Thread):
   def run(self):
     self.running = True
     while self.running:
-      sleep(self.SLEEP_TIME)
-      now = datetime.now().isoformat()[0:-7]
       if not self.running: break
-      try:
-        self.gather_files()
-        self.gather_apps()
-        self.cross_files_apps()
-        job = {
-          "method": "update",
-          "args": {
-            "open_files": self.open_files,
-          },
-        }
-        self.add_job(job)
-        self.log(now)
+      self.gather_iteration()
 
-      except Exception as err:
-        print("Failed to gather data with err: " + str(err))
-        print("Waiting a bit, and trying to gather again")
-        continue
+  def gather_iteration(self):
+    sleep(self.SLEEP_TIME)
+    now = datetime.now().isoformat()[0:-7]
+    try:
+      self.gather_files()
+      self.gather_apps()
+      self.cross_files_apps()
+      job = {
+        "method": "update",
+        "args": {
+          "open_files": self.open_files,
+        },
+      }
+      self.add_job(job)
+      self.log(now)
+
+    except Exception as err:
+      print("Failed to gather data with err: " + str(err))
+      print("Waiting a bit, and trying to gather again")
 
   def gather_files(self):
     project_paths = self.projects_handler.get_proj_dirs()
@@ -72,10 +77,10 @@ class Gatherer(threading.Thread):
       "reply_q": self.reply_q
     }
     self.add_job(proj_time_job)
-    self.open_files = self.files_handler.get_open_files(project_paths, project_time)
+    self.open_files = self.files_gatherer.get_open_files(project_paths, project_time)
 
   def gather_apps(self):
-    self.open_apps = self.apps_handler.get_open_apps()
+    self.open_apps = self.apps_gatherer.get_open_apps()
 
   def cross_files_apps(self):
     cross_correlation = pd.DataFrame(columns=self.open_files.columns)
