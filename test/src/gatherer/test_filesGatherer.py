@@ -25,7 +25,7 @@ class TestFilesGatherer:
     mock = mocker.patch("rarian.FilesGatherer.get_files_from_powershell")
     files_gatherer.get_open_files(paths, start_time)
     assert mock.call_count == 1
-    assert mock.called_once_with(paths, start_time)
+    mock.assert_called_once_with(paths, start_time)
 
   def test_get_files_from_powershell_call_psClient(self, test_path, start_time, get_files_gatherer, mocker):
     """Should call the PS client with the correct command"""
