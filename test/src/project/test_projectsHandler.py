@@ -236,7 +236,7 @@ class TestProjectsHandler:
     mock = mocker.patch("rarian.Project.remove_sub_dir")
     proj_handler.remove_sub_dir(".rarian")
     assert mock.call_count == 1
-    assert mock.called_once_with(".rarian")
+    mock.assert_called_once_with(".rarian")
 
   def test_remove_sub_dir_for_no_current(
     self,
@@ -387,8 +387,9 @@ class TestProjectsHandler:
     file = "file"
     app = "app"
     mock = mocker.patch("rarian.Project.update_opened_file")
+    proj_handler.current = "test project"
     proj_handler.opened_file(file, app)
-    mock.called_once_with(file, app)
+    mock.assert_called_once_with(file, app)
 
   def test_stop(self, create_project_handler):
     proj_handler = create_project_handler
