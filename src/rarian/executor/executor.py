@@ -30,38 +30,31 @@ class Executor:
       reply = self.reply_q.get()
       return reply
 
-  # Open and close:
   def set_current(self, name=None, path=None):
-    "Set current project"
     job = {
       "method": "set_current",
       "args": {
         "name": name,
-        "path": path
+        "path": path,
       },
       "reply_q": self.reply_q
     }
     return self.add_job(job)
-    self.projects_handler.set_current(name, path)
 
   def save(self):
-    "Save the projects"
     job = {
       "method": "save",
       "args": {}
     }
     return self.add_job(job)
-    self.projects_handler.save()
 
   def close_project(self):
-    "Close current project"
     job = {
       "method": "close_project",
       "args": {}
     }
     return self.add_job(job)
 
-  # Insert new:
   def new_project(
     self,
     paths=None,
@@ -74,7 +67,6 @@ class Executor:
     apps=None,
   ):
     "Create new project"
-    # if fields are missing, query for them...
     job = {
       "method": "new_project",
       "args": {
@@ -92,7 +84,6 @@ class Executor:
     return self.add_job(job)
 
   def new_file(self, path=None):
-    "Create new file"
     raise NotImplementedError
 
   def open_file(self, file, app=""):
@@ -163,25 +154,20 @@ class Executor:
       "reply_q": self.reply_q
     }
     data = self.add_job(job)
-    if isinstance(data, pd.DataFrame):
-      self.data[member] = data
-      self.bookmarks[member] = min(n, len(data))
-      return self.data[member][:n]
-    elif isinstance(data, list):
+    if isinstance(data, pd.DataFrame) or isinstance(data, list):
       self.data[member] = data
       self.bookmarks[member] = min(n, len(data))
       return self.data[member][:n]
     return None
 
   def get_more(self, member, n=1): # can also get previous if n<0
+    if member not in self.data.keys(): return None
     max = len(self.data[member])
     n0 = self.bookmarks[member]
     n1 = n0 + n
     self.bookmarks[member] = n1
     if n < 0:
-      n0 = n0 + n1
-      n1 = n0 - n1
-      n0 = n0 - n1
+      n0, n1 = n1, n0
     if n1 > max:
       n0 = n1 - abs(n)
       n1 = max
