@@ -37,39 +37,30 @@ class TestGatherer:
     gatherer.open_apps = "open apps"
     gatherer.gather_iteration()
     assert mock_add_job.call_count == 1
-    assert mock_add_job.call_countassert_called_with({
+    mock_add_job.assert_called_once_with({
         "method": "update",
         "args": {
           "open_files": gatherer.open_files,
-          "open_apps": gatherer.open_apps
         },
       })
 
   def test_gather_files_get_proj_dirs(self, get_gatherer, mocker):
     """should get proj dirs"""
     gatherer = get_gatherer
-    proj_handler_mock = mocker.patch('rarian.ProjectsHandler')
+    proj_handler_mock = mocker.patch('rarian.ProjectsHandler.get_proj_dirs')
     gatherer.projects_handler = proj_handler_mock()
     gatherer.gather_files()
     assert proj_handler_mock.call_count == 1
-    assert proj_handler_mock.call_countassert_called_with({
-      "method": "get_proj_dirs",
-      "args": {},
-      "reply_q": gatherer.reply_q
-    })
+    proj_handler_mock.assert_called_once_with()
 
   def test_gather_files_get_proj_start_time(self, get_gatherer, mocker):
     """should get proj start time"""
     gatherer = get_gatherer
-    proj_handler_mock = mocker.patch('rarian.ProjectsHandler')
+    proj_handler_mock = mocker.patch('rarian.ProjectsHandler.get_proj_start_time')
     gatherer.projects_handler = proj_handler_mock()
     gatherer.gather_files()
     assert proj_handler_mock.call_count == 1
-    assert proj_handler_mock.call_countassert_called_with({
-      "method": "get_proj_start_time",
-      "args": {},
-      "reply_q": gatherer.reply_q
-    })
+    proj_handler_mock.assert_called_once_with()
 
   def test_gather_files_call_files_gatherer(self, get_gatherer, mocker):
     """should get proj call files gatherer"""
@@ -100,7 +91,7 @@ class TestGatherer:
     mock_add_job = mocker.patch("rarian.Gatherer.add_job")
     gatherer.stop()
     assert mock_add_job.call_count == 1
-    assert mock_add_job.call_countassert_called_with({
+    mock_add_job.assert_called_once_with({
       "method": "stop",
       "args": {},
     })
