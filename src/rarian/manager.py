@@ -2,7 +2,6 @@ import sys
 import os
 import json
 
-
 src = os.path.abspath('./src')
 from rarian.ui.cliClient import CLIent
 from rarian.project.projectsHandler import ProjectsHandler
@@ -21,13 +20,11 @@ class Manager:
     self.executor = Executor(self.projects_handler, self.quit, self.os)
     self.client = CLIent(self.executor)
 
-  # Get operating system:
   def get_os(self):
     if "win" in sys.platform: self.os = "windows"
     elif "linux" in sys.platform: self.os = "linux"
     else: raise TypeError("unknown system platform", sys.platform)
 
-  # Load project data:
   def load_data(self):
     self.data_file = os.path.join(self.data_dir, "data.json")
     with open(self.data_file, 'r') as data_json:
@@ -46,26 +43,7 @@ class Manager:
   def save(self):
     self.executor.save()
 
-  def get_apps(self):
-    return self.executor.open()["apps"]
-
   def quit(self):
     self.gatherer.stop()
     self.client.stop()
     self.executor.stop()
-
-if __name__ == '__main__':
-  import time
-  t0 = time.perf_counter()
-  data_dir = "C:/Users/GiladHecht/Workspace/workspacesManager/appData"
-  manager = Manager(data_dir)
-  manager.executor.set_current(name="workspacesManager")
-  print("initialization took: ", time.perf_counter() - t0, "seconds")
-  time.sleep(10)
-  print("Gathering:")
-  t1 = time.perf_counter()
-  manager.run()
-  print("Gathering took: ", time.perf_counter() - t1, "seconds")
-  t2 = time.perf_counter()
-  manager.save()
-  print("Saving took: ", time.perf_counter() - t2, "seconds")
