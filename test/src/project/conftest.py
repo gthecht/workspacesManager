@@ -27,10 +27,11 @@ project_dict = {
 }
 
 def init_project():
+  if os.path.exists(empty_proj): shutil.rmtree(empty_proj)
   shutil.copytree(test_proj, empty_proj)
   shutil.rmtree(os.path.join(empty_proj, ".rarian"))
   proj_from_dict = Project(**project_dict)
-  shutil.rmtree(empty_proj)
+  if os.path.exists(empty_proj): shutil.rmtree(empty_proj)
   return proj_from_dict
 
 proj_from_dict = init_project()
@@ -56,10 +57,11 @@ def project_name():
 
 @pytest.fixture
 def create_uninitialized_project():
+  if os.path.exists(empty_proj): shutil.rmtree(empty_proj)
   shutil.copytree(test_proj, empty_proj)
   shutil.rmtree(os.path.join(empty_proj, ".rarian"))
   yield
-  shutil.rmtree(empty_proj)
+  if os.path.exists(empty_proj): shutil.rmtree(empty_proj)
 
 @pytest.fixture
 def create_initialized_project():
