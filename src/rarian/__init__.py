@@ -7,4 +7,5 @@ from rarian.project.project import Project
 from rarian.project.projectsHandler import ProjectsHandler
 from rarian.ui.cliClient import CLIent
 import rarian.powershellClient as PSClient
+from rarian.manager import Manager
 from rarian.unknownOSWarning import unknown_OS_Warning
