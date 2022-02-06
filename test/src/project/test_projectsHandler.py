@@ -21,7 +21,7 @@ class TestProjectsHandler:
 
         proj_handler.load_data()
         assert proj_handler.projects_paths == ["projects"]
-        assert proj_handler.current is None
+        assert proj_handler.current == "null project"
         assert proj_handler.default_author == "defaultAuthor"
 
     def test_init_projects_for_non_project(
@@ -131,9 +131,15 @@ class TestProjectsHandler:
             assert err.value == "Project doesn't exist"
 
     def test_get_current(self, create_project_handler):
+        """Should return current project"""
         proj_handler = create_project_handler
         proj_handler.current = "current"
         assert proj_handler.get_current() == "current"
+
+    def test_get_current_unassigned(self, create_project_handler):
+        """Should return null if current project unassigned"""
+        proj_handler = create_project_handler
+        assert proj_handler.get_current() == "null project"
 
     def test_save_to_file(
         self,
@@ -143,7 +149,7 @@ class TestProjectsHandler:
         """Should save the data to the data path"""
         proj_handler = create_project_handler
         proj_handler.projects_paths = ["projects"]
-        proj_handler.current = None
+        proj_handler.current = "null project"
         proj_handler.default_author = "defaultAuthor"
 
         spy = mocker.spy(Project, "save")
@@ -152,7 +158,7 @@ class TestProjectsHandler:
             data_str = data_file.read()
         data = json.loads(data_str)
         assert data["projects"] == ["projects"]
-        assert data["current"] is None
+        assert data["current"] == "null project"
         assert data["default author"] == "defaultAuthor"
         assert spy.call_count == 0
 
@@ -185,7 +191,7 @@ class TestProjectsHandler:
         proj_handler.current = project_name
         spy_off = mocker.spy(Project, "turn_off")
         proj_handler.close_project()
-        assert proj_handler.current is None
+        assert proj_handler.current == "null project"
         assert spy_off.call_count == 1
 
     def test_close_project_should_do_nothing(
@@ -196,16 +202,17 @@ class TestProjectsHandler:
         """Should do nothing if there is no current project"""
         proj_handler = create_project_handler
         spy_off = mocker.spy(Project, "turn_off")
-        assert proj_handler.current is None
+        assert proj_handler.current == "null project"
         proj_handler.close_project()
-        assert proj_handler.current is None
+        assert proj_handler.current == "null project"
         assert spy_off.call_count == 0
 
     def test_new_project_name_already_exists(
         self,
         create_project_handler,
     ):
-        """Should raise an error that the name of the project is already taken"""
+        """Should raise an error that the name of the project is already
+        taken"""
         proj_handler = create_project_handler
         proj_name = list(proj_handler.projects.keys())[0]
         with pytest.raises(ValueError) as err:

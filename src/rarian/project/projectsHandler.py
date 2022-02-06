@@ -35,7 +35,7 @@ class ProjectsHandler(threading.Thread):
             data_str = data_file.read()
         data = json.loads(data_str)
         self.projects_paths = data["projects"]
-        self.current = None
+        self.current = "null project"
         self.default_author = data["default author"]
 
     def init_projects(self):
@@ -67,7 +67,7 @@ class ProjectsHandler(threading.Thread):
         # Turn previous project off:
         if name == self.current:
             return
-        if self.current:
+        if self.current != "null project":
             self.projects[self.current].turn_off()
         self.current = name
         # Turn new project on:
@@ -85,14 +85,14 @@ class ProjectsHandler(threading.Thread):
         }
         with open(self.data_path, 'w') as data_path:
             json.dump(data_dict, data_path, sort_keys=True, indent=2)
-        if self.current is None:
+        if self.current == "null project":
             return None
         self.projects[self.current].save()
 
     def close_project(self):
-        if self.current:
+        if self.current != "null project":
             self.projects[self.current].turn_off()
-            self.current = None
+            self.current = "null project"
 
     # Insert:
     def new_project(
@@ -115,7 +115,7 @@ class ProjectsHandler(threading.Thread):
             self.projects_paths.append(paths[0])
 
     def remove_sub_dir(self, path):
-        if self.current:
+        if self.current != "null project":
             self.projects[self.current].remove_sub_dir(path)
         else:
             print("Assign project before you remove a directory")
@@ -126,7 +126,7 @@ class ProjectsHandler(threading.Thread):
 
     # Gather:
     def update(self, open_files):
-        if self.current is None:
+        if self.current == "null project":
             return None
         self.projects[self.current].update(open_files)
         self.save()
@@ -134,24 +134,24 @@ class ProjectsHandler(threading.Thread):
     # Get:
     def get_open(self):
         """Get the open project, files, apps and more"""
-        if self.current is None:
+        if self.current == "null project":
             return None
         return self.projects[self.current].get_open()
 
     def get_proj_dirs(self):
-        if self.current is None:
+        if self.current == "null project":
             return None
         return self.projects[self.current].dirs
 
     def get_proj_start_time(self):
-        if self.current is None:
+        if self.current == "null project":
             return None
         return self.projects[self.current].start_time
 
     def get_project_data(self, member, sort_by="Relevance"):
         if member == "projects":
             return list(self.projects.keys())
-        if self.current is None:
+        if self.current == "null project":
             return None
         if member == "files":
             data = self.projects[self.current].files
@@ -167,7 +167,7 @@ class ProjectsHandler(threading.Thread):
         return data
 
     def opened_file(self, file, app):
-        if self.current is None:
+        if self.current == "null project":
             return None
         return self.projects[self.current].update_opened_file(file, app)
 
