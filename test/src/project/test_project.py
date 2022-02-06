@@ -89,6 +89,12 @@ class TestProjectClass:
         )
         assert proj.path() == empty_proj_path
 
+    def test_get_path_item(self, test_proj_path, load_project):
+        project = load_project
+        path_details = project.get_path_item(test_proj_path)
+        print(path_details)
+        assert path_details[0][0] == test_proj_path.split('\\')[-1]
+
     def test_get_files(self, create_uninitialized_project, init_new_project):
         create_uninitialized_project
         proj = init_new_project
@@ -96,8 +102,19 @@ class TestProjectClass:
         columns.remove("FullName")
         columns.extend(["Relevance", "Open", "Type", "App"])
         assert list(proj.files.columns) == columns
-        assert proj.files["Name"][0] == "testFile.py"
-        assert len(proj.files.index) == 1
+        assert "testFile.py" in list(proj.files["Name"])
+        assert len(proj.files.index) == 2
+
+    def test_get_files_adds_path_to_files(
+        self,
+        empty_proj_path,
+        create_uninitialized_project,
+        init_new_project,
+    ):
+        create_uninitialized_project
+        proj = init_new_project
+        assert empty_proj_path in list(proj.files.index)
+        assert len(proj.files.index) == 2
 
     def test_file_add_columns(self, init_new_project):
         proj = init_new_project
