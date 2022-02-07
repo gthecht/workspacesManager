@@ -37,6 +37,26 @@ class TestFilesGatherer:
         assert mock.call_count == 1
         mock.assert_called_once_with(paths, start_time)
 
+    def test_get_path_item(
+        self,
+        test_path,
+        start_time,
+        get_files_gatherer,
+        mocker,
+    ):
+        """Should call the PS client with the current path"""
+        files_gatherer = get_files_gatherer
+        mock = mocker.patch("rarian.PSClient.get_PS_table_from_list")
+        files_gatherer.get_path_item(test_path, start_time.isoformat())
+        assert mock.call_count == 1
+        mock.assert_called_once_with(
+            "Get-Item '" + test_path +
+            "' -ErrorAction silentlycontinue " +
+            "| Where-Object { $_.LastAccessTime -gt \"" +
+            start_time.isoformat() + "\"}",
+            files_gatherer.items
+        )
+
     def test_get_files_from_powershell_call_psClient(
         self,
         test_path,
@@ -49,8 +69,8 @@ class TestFilesGatherer:
         mock = mocker.patch("rarian.PSClient.get_PS_table_from_list")
         files_gatherer.get_files_from_powershell(
             [test_path], start_time.isoformat())
-        assert mock.call_count == 1
-        mock.assert_called_once_with(
+        assert mock.call_count == 2
+        mock.assert_called_with(
             "Get-ChildItem '" + test_path + "\\*'" +
             " -ErrorAction silentlycontinue " +
             "| Where-Object { $_.LastAccessTime -gt \"" +
@@ -70,7 +90,7 @@ class TestFilesGatherer:
         mock = mocker.patch("rarian.PSClient.get_PS_table_from_list")
         files_gatherer.get_files_from_powershell(
             [test_path, test_path, test_path], start_time.isoformat())
-        assert mock.call_count == 3
+        assert mock.call_count == 6
         mock.assert_called_with(
             "Get-ChildItem '" + test_path + "\\*'" +
             " -ErrorAction silentlycontinue " +
