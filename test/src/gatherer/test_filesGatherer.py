@@ -13,8 +13,6 @@ class TestFilesGatherer:
         files_gatherer = get_files_gatherer
         output = files_gatherer.get_open_files(None, start_time)
         assert output.empty
-        output = files_gatherer.get_open_files([test_path], start_time)
-        assert output.empty
 
     def test_get_open_files_wrong_os(self, start_time, get_files_gatherer):
         """Should return a warning if the OS isn't supported"""
@@ -97,7 +95,7 @@ class TestFilesGatherer:
         import time
         time.sleep(1)
         file_dir_path = '\\'.join(file_path.split('\\')[:-1])
-        time = start_time - datetime.timedelta(seconds=30)
+        time_diff = start_time - datetime.timedelta(seconds=30)
         open_files = files_gatherer.get_files_from_powershell(
-            [test_path, file_dir_path], time)
+            [test_path, file_dir_path], time_diff)
         assert "conftest.py" in list(open_files["Name"])

@@ -43,8 +43,7 @@ class FilesGatherer:
                   "| Where-Object { $_.LastAccessTime -gt \"" + \
                   start_time + "\"}"
             new_child_items = PSClient.get_PS_table_from_list(cmd, self.items)
-            for child_item in new_child_items:
-                child_items.append(child_item)
+            child_items.extend(new_child_items)
         open_files = pd.DataFrame(child_items, columns=self.items)
         # parse time fields:
         open_files = PSClient.parse_time(
