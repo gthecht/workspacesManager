@@ -1,5 +1,6 @@
 import pandas as pd
 import pytest
+from datetime import datetime
 from rarian.gatherer.appsGatherer import find_words_in_string, match_candidates
 
 
@@ -51,30 +52,156 @@ class TestAppsGatherer:
         assert isinstance(apps_gatherer.apps, pd.DataFrame)
         assert all(apps_gatherer.apps.columns == ["path", "pathCandidates"])
 
-    @pytest.mark.skip(reason='need to test')
-    def test_get_open_apps(self):
-        pass
+    def test_get_open_apps_not_windows(self, get_apps_gatherer):
+        """Should return unknown os warning if os is unknown"""
+        apps_gatherer = get_apps_gatherer
+        old_os = apps_gatherer.os
+        apps_gatherer.os = "Unknown os"
+        with pytest.raises(TypeError):
+            apps_gatherer.get_open_apps()
+        apps_gatherer.os = old_os
 
-    @pytest.mark.skip(reason='need to test')
+    def test_get_open_apps_call_psClient(self, get_apps_gatherer, mocker):
+        """Should call ps client to get open apps"""
+        apps_gatherer = get_apps_gatherer
+        items = ["Id", "Name", "Description",
+                 "MainWindowTitle", "StartTime", "Path"]
+        cmd = "Get-Process | Where-Object { $_.MainWindowHandle -ne 0}"
+        ps_mock = mocker.patch('rarian.PSClient.get_PS_table_from_list')
+        apps_gatherer.get_open_apps()
+        assert ps_mock.call_args_list[0].args == (cmd, items)
+
+    def test_get_open_apps_catches_error(self, get_apps_gatherer, mocker):
+        """Should catch exception if PSClient doesn't get open apps
+        successfully"""
+        apps_gatherer = get_apps_gatherer
+        mocker.patch('rarian.PSClient.get_PS_table_from_list',
+                     side_effect=Exception('mocked error'))
+        with pytest.raises(Exception) as err:
+            apps_gatherer.get_open_apps()
+            assert str(err) == 'mocked error'
+
+    def test_get_open_apps_cleans_list(
+        self,
+        get_apps_gatherer,
+        apps_items,
+        mocker,
+    ):
+        """Should call self.clean_list on apps from PSClient"""
+        apps_gatherer = get_apps_gatherer
+        clean_list_mock = mocker.patch('rarian.AppsGatherer.clean_list')
+        apps_gatherer.get_open_apps()
+        assert clean_list_mock.call_args[0][0] == apps_items
+
+    def test_get_open_apps_get_open_folders(self, get_apps_gatherer, mocker):
+        """Should call self.get_open_folders"""
+        apps_gatherer = get_apps_gatherer
+        get_open_folders_mock = mocker.patch('rarian.AppsGatherer.clean_list')
+        apps_gatherer.get_open_apps()
+        assert get_open_folders_mock.called_once
+
+    def test_get_open_apps_has_right_columns(
+        self,
+        get_apps_gatherer,
+        apps_items,
+    ):
+        """Should return correct dataframe"""
+        apps_gatherer = get_apps_gatherer
+        open_apps = apps_gatherer.get_open_apps()
+        columns = apps_items
+        columns.extend(["EndTime", "App"])
+        assert [col in columns for col in open_apps.columns]
+        assert [col in open_apps.columns for col in columns]
+
+    @pytest.mark.skip(reason='Probably will remove the function')
     def test_clean_list(self):
         pass
 
-    @pytest.mark.skip(reason='need to test')
-    def test_get_app_candidates(self):
-        pass
+    def test_get_app_candidates(self, get_apps_gatherer):
+        """Should get list of candidates for item from apps"""
+        apps_gatherer = get_apps_gatherer
+        item = "3D"
+        candidates = apps_gatherer.get_app_candidates(item)
+        real_candidates = [
+            find_words_in_string(item, name)
+            + find_words_in_string(name, item)
+            for name in apps_gatherer.apps.index
+        ]
+        assert candidates == real_candidates
 
-    @pytest.mark.skip(reason='need to test')
+    @pytest.mark.skip(reason='as yet unimplemented')
     def test_get_top_app(self):
         pass
 
-    @pytest.mark.skip(reason='need to test')
-    def test_add_open_apps_command_to_apps(self):
-        pass
+    def test_add_open_apps_command_to_apps(self, get_apps_gatherer):
+        """Should add the path in open_apps to the relevant app if no path"""
+        apps_gatherer = get_apps_gatherer
+        prev_apps = apps_gatherer.apps.copy()
+        apps_gatherer.apps = pd.DataFrame({"App": ["app"], "path": [None]})
+        path = "path/to/app"
+        open_apps = pd.DataFrame({"App": [0], "Path": [path]})
+        apps_gatherer.add_open_apps_command_to_apps(open_apps)
+        assert apps_gatherer.apps.path.loc[0] == path
+        apps_gatherer.apps = prev_apps.copy()
 
-    @pytest.mark.skip(reason='need to test')
-    def test_get_open_folders(self):
-        pass
+    def test_get_open_folders(self, get_apps_gatherer, mocker):
+        """Should call get open explorers on open explorer apps"""
+        apps_gatherer = get_apps_gatherer
+        open_apps = pd.DataFrame(
+            {"App": ["folder"], "Name": ["explorer"], "Path": [None]})
+        explorer_mock = mocker.patch('rarian.Explorer.get_open_explorers')
+        returned_apps = open_apps
+        returned_apps["Path"].loc[0] = "explorer/path"
+        explorer_mock.return_value = returned_apps
+        out_apps = apps_gatherer.get_open_folders(open_apps)
+        assert explorer_mock.callled_with(open_apps)
+        assert out_apps.equals(returned_apps)
 
-    @pytest.mark.skip(reason='need to test')
-    def test_compare_apps(self):
-        pass
+    def test_compare_apps_keeps_newer_duplicate(
+        self,
+        get_apps_gatherer,
+        get_old_apps,
+    ):
+        """Should keep the newer version of duplicate rows"""
+        apps_gatherer = get_apps_gatherer
+        old_apps = get_old_apps
+        new_apps = old_apps.copy()
+        new_apps["EndTime"].loc[0] = ""
+        out_apps = apps_gatherer.compare_apps(new_apps, old_apps)
+        # compare apps updates the start time so we'll remove it
+        del out_apps["StartTime"]
+        del new_apps["StartTime"]
+        assert out_apps.equals(new_apps)
+
+    def test_compare_apps_adds_end_time_to_closed_apps(
+        self,
+        get_apps_gatherer,
+        get_old_apps,
+    ):
+        """Should Add EndTime to rows that aren't in new"""
+        apps_gatherer = get_apps_gatherer
+        old_apps = get_old_apps
+        new_apps = old_apps[old_apps.index == 0].copy()
+        new_apps["EndTime"].loc[0] = ""
+        now = datetime.fromisoformat(datetime.now().isoformat()[0:-7])
+        out_apps = apps_gatherer.compare_apps(new_apps, old_apps)
+        assert datetime.fromisoformat(out_apps["EndTime"].loc[1]) >= now
+
+    def test_compare_apps_changes_start_time_of_new_apps_to_now(
+        self,
+        get_apps_gatherer,
+        get_old_apps,
+    ):
+        """Should change the start time of apps in new to now but not the old"""
+        apps_gatherer = get_apps_gatherer
+        old_apps = get_old_apps
+        new_apps = old_apps[old_apps.index == 0].copy()
+        old_apps["EndTime"].loc[1] = ""
+        now = datetime.fromisoformat(datetime.now().isoformat()[0:-7])
+        out_apps = apps_gatherer.compare_apps(old_apps, new_apps)
+        print(old_apps)
+        print(new_apps)
+        print(out_apps)
+        assert datetime.fromisoformat(out_apps["StartTime"].loc[0]) < now
+        assert datetime.fromisoformat(out_apps["StartTime"].loc[1]) >= now
+

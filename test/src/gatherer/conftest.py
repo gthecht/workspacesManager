@@ -2,7 +2,7 @@ import os
 import sys
 import pytest
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timedelta
 from rarian.gatherer.appsGatherer import AppsGatherer
 from rarian.gatherer.filesGatherer import FilesGatherer
 from rarian.gatherer.gatherer import Gatherer
@@ -46,21 +46,52 @@ def file_path():
 def start_time():
     return datetime.now()
 
-# Apps gatherer
+# %% Apps gatherer
+
+
+apps_gatherer = AppsGatherer(OS)
+apps_items_list = ["Id", "Name", "Description",
+                   "MainWindowTitle", "StartTime", "Path"]
 
 
 @pytest.fixture
 def get_apps_gatherer():
-    return AppsGatherer(OS)
+    return apps_gatherer
 
-# Files gatherer
+
+@pytest.fixture
+def apps_items():
+    return apps_items_list
+
+
+@pytest.fixture
+def get_old_apps():
+    one_minute = timedelta(minutes=1)
+    old_apps = pd.DataFrame({
+        "Id": ["0123", "4567"],
+        "App": ["app0", "app1"],
+        "Name": ["app0", "app1"],
+        "Description": ["app0 - open window", "app1 - closed app"],
+        "MainWindowTitle": ["app0 - window title", "app1 - window title"],
+        "StartTime": [
+            (datetime.now() - 2 * one_minute).isoformat()[0:-7],
+            (datetime.now() - one_minute).isoformat()[0:-7],
+        ],
+        "EndTime": [
+            (datetime.now() - one_minute).isoformat()[0:-7],
+            datetime.now().isoformat()[0:-7],
+        ],
+    })
+    return old_apps
+
+# %% Files gatherer
 
 
 @pytest.fixture
 def get_files_gatherer():
     return FilesGatherer(OS)
 
-# Explorer gatherer
+# %% Explorer gatherer
 
 
 @pytest.fixture
