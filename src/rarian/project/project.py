@@ -86,9 +86,14 @@ class Project:
     def path(self):
         return self.paths[0]
 
+    def get_path_item(self, path):
+        cmd = "Get-Item '" + path + "' -ErrorAction silentlycontinue"
+        return PSClient.get_PS_table_from_list(cmd, self.file_items)
+
     def get_files(self):
         child_items = []
         for path in self.paths:
+            child_items.extend(self.get_path_item(path))
             cmd = "Get-ChildItem '" + path + \
                   "' -Recurse -ErrorAction silentlycontinue"
             new_child_items = PSClient.get_PS_table_from_list(
