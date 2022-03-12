@@ -178,7 +178,6 @@ class TestProjectClass:
         new_file_path = add_new_file(empty_proj_path)
         proj = Project(**project_details)
         # make sure the tmp file is in the project
-        # make sure the tmp file is in the project
         assert new_file_path in list(proj.files.index)
         sub_dir = "temp"
         proj.remove_sub_dir(sub_dir)
@@ -294,7 +293,7 @@ class TestProjectClass:
         })
         proj.open_files.set_index("FullName", inplace=True)
         prev_file = proj.files.loc[file_name]
-        assert proj.files.at[file_name, "Open"] == False
+        assert not proj.files.at[file_name, "Open"]
         proj.files_update_open()
         assert proj.files.at[file_name, "Open"]
         assert proj.files.at[file_name, "App"] == "app"
@@ -363,7 +362,7 @@ class TestProjectClass:
         assert proj.files.at[file_name, "Open"]
         proj.open_files = pd.DataFrame()
         proj.files_update_closed()
-        assert proj.files.at[file_name, "Open"] == False
+        assert not proj.files.at[file_name, "Open"]
 
     def test_files_update_closed_when_file_still_open(
         self,
@@ -383,7 +382,7 @@ class TestProjectClass:
             "Type": ["py"],
         })
         proj.open_files.set_index("FullName", inplace=True)
-        assert proj.files.at[file_name, "Open"] == False
+        assert not proj.files.at[file_name, "Open"]
         proj.files.at[file_name, "Open"] = True
         assert proj.files.at[file_name, "Open"]
         proj.files_update_closed()
