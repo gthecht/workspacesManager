@@ -1,5 +1,6 @@
 import os
 import shutil
+from time import sleep
 import json
 import pytest
 import pandas as pd
@@ -27,14 +28,20 @@ project_dict = {
 }
 
 
+def rmtree_sync(path):
+    shutil.rmtree(path)
+    while os.path.exists(path):
+        sleep(0.01)
+
+
 def init_project():
     if os.path.exists(empty_proj):
-        shutil.rmtree(empty_proj)
+        rmtree_sync(empty_proj)
     shutil.copytree(test_proj, empty_proj)
-    shutil.rmtree(os.path.join(empty_proj, ".rarian"))
+    rmtree_sync(os.path.join(empty_proj, ".rarian"))
     proj_from_dict = Project(**project_dict)
     if os.path.exists(empty_proj):
-        shutil.rmtree(empty_proj)
+        rmtree_sync(empty_proj)
     return proj_from_dict
 
 
@@ -68,26 +75,26 @@ def project_name():
 @pytest.fixture
 def create_uninitialized_project():
     if os.path.exists(empty_proj):
-        shutil.rmtree(empty_proj)
+        rmtree_sync(empty_proj)
     shutil.copytree(test_proj, empty_proj)
-    shutil.rmtree(os.path.join(empty_proj, ".rarian"))
+    rmtree_sync(os.path.join(empty_proj, ".rarian"))
     yield
     if os.path.exists(empty_proj):
-        shutil.rmtree(empty_proj)
+        rmtree_sync(empty_proj)
 
 
 @pytest.fixture
 def create_initialized_project():
     shutil.copytree(test_proj, tmp_proj)
     yield
-    shutil.rmtree(tmp_proj)
+    rmtree_sync(tmp_proj)
 
 
 @pytest.fixture
 def load_project():
     shutil.copytree(test_proj, tmp_proj)
     yield Project.load(tmp_proj)
-    shutil.rmtree(tmp_proj)
+    rmtree_sync(tmp_proj)
 
 
 @pytest.fixture
@@ -127,6 +134,6 @@ def create_project_handler():
     shutil.copytree(test_proj, tmp_proj)
     proj_handler = ProjectsHandler(app_data_path)
     yield proj_handler
-    shutil.rmtree(tmp_proj)
+    rmtree_sync(tmp_proj)
     with open(app_data_path, 'w') as data_file:
         json.dump(app_data_dict, data_file, sort_keys=True, indent=2)
