@@ -170,7 +170,7 @@ class AppsGatherer:
         explorer_row = open_apps.loc[open_apps["Name"] == "explorer"]
         open_apps = open_apps[open_apps["Name"] != "explorer"]
         open_folders = self.explorer.get_open_explorers(explorer_row)
-        open_apps = open_apps.append(open_folders)
+        open_apps = pd.concat([open_apps, open_folders])
         open_apps.reset_index(drop=True, inplace=True)
         return open_apps
 

@@ -42,5 +42,5 @@ class Explorer:
             row.MainWindowTitle = f'{dir[0]} - File Explorer'
             row.Path = dir[1][8:]
             row.App = 'File Explorer'
-            open_dirs = open_dirs.append(row, ignore_index=True)
+            open_dirs = pd.concat([open_dirs, row], ignore_index=True)
         return open_dirs
