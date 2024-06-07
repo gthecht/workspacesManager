@@ -107,7 +107,7 @@ class AppsGatherer:
             open_apps.insert(1, "App", app_names)
             self.add_open_apps_command_to_apps(open_apps)
             open_apps = self.get_open_folders(open_apps)
-            # change start time to date object, and add end time field:
+            open_apps.reset_index(drop=True, inplace=True)
             try:
                 start_time = open_apps.assign(
                     start_time=lambda dataframe: dataframe["StartTime"].map(
@@ -144,7 +144,6 @@ class AppsGatherer:
             clean_list.append(row)
         return clean_list
 
-    # Checks which apps are suitable for this item
     def get_app_candidates(self, item):
         if item == "":
             return []
@@ -169,9 +168,9 @@ class AppsGatherer:
     def get_open_folders(self, open_apps):
         explorer_row = open_apps.loc[open_apps["Name"] == "explorer"]
         open_apps = open_apps[open_apps["Name"] != "explorer"]
-        open_folders = self.explorer.get_open_explorers(explorer_row)
-        open_apps = open_apps.append(open_folders)
-        open_apps.reset_index(drop=True, inplace=True)
+        if not explorer_row.empty:
+            open_folders = self.explorer.get_open_explorers(explorer_row)
+            open_apps = open_apps.append(open_folders)
         return open_apps
 
     def compare_apps(self, new_apps, old_apps):
@@ -180,7 +179,6 @@ class AppsGatherer:
             subset=['Id', 'App', 'Name', 'Description', 'MainWindowTitle'],
             keep='first',
         )
-        # these are the old apps that have ended
         ended = [not dup for dup in duplicated[len(new_apps):]]
         now = datetime.now().isoformat()[0:-7]
         for ind in [i for i, e in enumerate(ended) if e]:
@@ -188,7 +186,6 @@ class AppsGatherer:
                 concat_df.loc[ind + len(new_apps.index)]["EndTime"] = now
 
         duplicated_start = concat_df.duplicated(keep='last')
-        # these are the new apps that have started
         started = [not dup for dup in duplicated_start[:len(new_apps)]]
         for ind in [i for i, e in enumerate(started) if e]:
             concat_df.loc[ind]["StartTime"] = now
